@@ -1,0 +1,185 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>个人信息</title>
+    <base href="../">
+    <meta name="keywords" content="小吃,美食,零食,源辰"/>
+    <meta name="description" content="各种小吃美食，应有尽有"/>
+    <link href="images/xiaomi-logo.png" rel="shortcut icon" type="image/x-icon"/>
+    <link href="css/header.css" rel="stylesheet" type="text/css"/>
+    <link href="css/footer.css" rel="stylesheet" type="text/css"/>
+    <link href="css/info.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+<div id="app">
+    <!-- 顶部区域 -->
+    <header id="header">
+        <!-- 顶部标题区域 -->
+        <div class="htitle">
+            <a href="#" target="_blank" class="location">衡阳</a>
+
+            <div class="header-info" id="login_info">
+
+                <div class="login-info">
+                    <a href="login.html" title="点击登录">您好，请登录</a>
+                    <a href="register.html" title="点击注册"> 免费注册 </a>
+                </div>
+
+                <div class="person-info">
+                    <span>|</span>
+                    <a href="front/order.html" target="_blank">我的订单</a>
+                    <span>|</span>
+                    <a href="#" target="_blank">我的小吃</a>
+                    <span>|</span>
+                    <a href="#" target="_blank">客户服务</a>
+                    <span>|</span>
+                    <a href="front/Information.html">个人信息</a>
+                </div>
+
+            </div>
+        </div>
+        <a href="index.html">
+            <img src="images/logo.png" width="260px" height="120px"/>
+        </a>
+
+    </header>
+    <table v-if="!forgetflag">
+        <tr>
+            <td class="labname"><label for="nickName">用户名：</label></td>
+            <td><input type="text" name="Tel1" placeholder="请输入您的用户名"
+                       id="nickName" v-model="nickName"/></td>
+        </tr>
+        <tr>
+            <td class="labname"><label for="email">邮箱：</label></td>
+            <td><input type="text" name="email" placeholder="请输入您的邮箱号码"
+                       id="email" v-model="email"/></td>
+        </tr>
+
+        <tr>
+            <td class="labname"><label for="yzm">验证码：</label></td>
+            <td><input type="text" name="yzm" placeholder="请输入验证码"
+                       id="yzm" v-model="yzm"/></td>
+            <td>
+                <input type="button" value="获取验证码" @click="checkEmail">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="button" value="确认" @click="confirmYzm">
+            </td>
+        </tr>
+    </table>
+    <table v-if="forgetflag">
+        <tr>
+            <td class="labname"><label for="Pwd">请输入新密码：</label></td>
+            <td><input type="text" name="Pwd" placeholder="请输入您的新密码"
+                       id="Pwd" v-model="Pwd"/></td>
+        </tr>
+
+        <tr>
+            <td class="labname"><label for="Pwd2">确认新密码：</label></td>
+            <td>
+                <input type="text" name="Pwd2" placeholder="请确认您的密码"
+                       id="Pwd2" v-model="Pwd2"/>
+            </td>
+            <td>
+                <input type="button" value="确认修改" @click="findPwd">
+            </td>
+        </tr>
+
+    </table>
+
+    </ul>
+</div>
+</body>
+
+<script src="js/vue.js"></script>
+<script src="js/axios.js"></script>
+<script type="text/javascript">
+    let vm = new Vue({
+        el: "#app",
+        data: {
+            forgetflag: false,//手机号码通过后隐藏开关
+            email: "",
+            Pwd: "",
+            Pwd2: "",
+            yzm: "",
+            nickName: "",//用户名
+            bzyzm: ""//标准验证码
+        },
+
+        methods: {
+            checkEmail: function () {
+                var params = new URLSearchParams();
+                params.append("op", "checkEmail");
+                params.append("email", this.email);
+                params.append("nickName", this.nickName);
+                axios.post("login.action", params).then(data => {
+                    var result = data.data;
+                    if (result.code != 1) {
+                        alert("获取失败:" + result.msg);
+                        return;
+                    }
+                    // this.forgetflag = true;
+                    //alert("验证成功...");
+                    this.getYzm();
+                });
+            },
+            getYzm: function () {
+                var params = new URLSearchParams();
+                params.append("op", "getYzm");
+                params.append("email", this.email);
+                axios.post("login.action", params).then(data => {
+                    var result = data.data;
+                    if (result.code != 1) {
+                        alert(result.msg);
+                        return;
+                    }
+                    this.bzyzm = result.data;
+
+                });
+            },
+            confirmYzm: function () {
+                //alert(this.bzyzm);
+                var params = new URLSearchParams();
+                params.append("op", "confirmYzm");
+                params.append("bzyzm", this.bzyzm);
+                params.append("yzm", this.yzm);
+                axios.post("login.action", params).then(data => {
+                    var result = data.data;
+                    if (result.code != 1) {
+                        alert(result.msg);
+                        return;
+                    }
+                    this.forgetflag = true;
+                    alert("验证成功...");
+                });
+            },
+
+            findPwd: function () {
+                var params = new URLSearchParams();
+                params.append("op", "findPwd");
+                params.append("tel", this.Tel1);
+                params.append("pwd", this.Pwd);
+                params.append("pwd2", this.Pwd2);
+                axios.post("login.action", params).then(data => {
+                    var result = data.data;
+                    if (result.code == 0 || result.code == 2 || result.code == 3) {
+                        alert(result.msg);
+                        return;
+                    }
+                    alert("重置密码成功！");
+                    location.href = 'login.html';
+                });
+
+            }
+
+        }
+    });
+
+
+</script>
+
+</html>

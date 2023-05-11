@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<title></title>
+<head>
+    <style type="text/css">
+    .hovertable {
+        font-family: verdana,arial,sans-serif;
+        font-size:10px;
+        color:#333333;
+        border-width: 10px;
+        border-color: #999999;
+        border-collapse: collapse;
+    }
+    .hovertable th {
+        background-color:#c3dde0;
+        border-width: 1px;
+        padding: 8px;
+        border-style: solid;
+        border-color: #a9c6c9;
+    }
+    .hovertable tr {
+        background-color:#d4e3e5;
+    }
+    .hovertable td {
+        border-width: 10px;
+        padding: 8px;
+        border-style: solid;
+        border-color: #a9c6c9;
+    }
+</style>
+<div id="appa">
+<!-- Table goes in the document BODY -->
+<table >
+    <tr>
+        <th>管理id</th><th style="text-align: center">姓名</th><th>电话</th><th>状态</th>
+    </tr>
+    <tr v-for="value in admins" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+        <td>{{value.aid}}</td><td>{{value.aname}}</td><td>{{value.tel}}</td><td>{{value.status}}</td>
+    </tr>
+</table>
+</div>
+
+<script src="../../js/vue.js"></script>
+<script src="../../js/axios.js"></script>
+
+<script type="text/javascript">
+    let vm=new Vue({
+        el:"#appa",
+        data:{
+            admins:{},
+        },
+        methods:{
+            showAdmin:function () {
+                var params =new URLSearchParams();
+                params.append("op","showAdmin");
+                axios.post("../../admin.action",params).then(data=>{
+                    let jsonModel=data.data;
+                    if(jsonModel.code==1){
+                        this.admins=jsonModel.data;
+                    }else{
+                        alert("无管理者用户");
+                    }
+                });
+            }
+        },
+
+        mounted:function () {
+           axios.all([this.showAdmin()]);
+        }
+    })
+
+</script>
+    </body>
+</html>

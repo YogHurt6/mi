@@ -1,0 +1,399 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>个人信息</title>
+    <base href="../">
+    <meta name="keywords" content="小吃,美食,零食,源辰"/>
+    <meta name="description" content="各种小吃美食，应有尽有"/>
+    <link href="images/xiaomi-logo.png" rel="shortcut icon" type="image/x-icon"/>
+    <link href="css/header.css" rel="stylesheet" type="text/css"/>
+    <link href="css/footer.css" rel="stylesheet" type="text/css"/>
+    <style>
+        **#nav  {
+            width: 500px;
+            background:yellow ;
+        }**
+         .title{
+             font-size: 18px;
+             font-weight: bolder;
+             text-indent: 1em;
+             line-height: 35px;
+             background: greenyellow;
+         }
+
+        /*ul{*/
+        /*    color: red;*/
+        /*}*/
+
+        /*ul li*/
+        ul li {
+            height: 30px;
+            /*    行高*/
+            /*    list-style: none;*/
+            /*    去掉网页当中的点*/
+            list-style: circle;
+            text-indent: 1em;
+            background: yellow;
+        }
+        /*    字体间距 */
+        /*  把它变成空心点  */
+        /*none 去掉圆点*/
+        /*circle   空心圆*/
+        /*decimal   数字*/
+        /*square    正方形*/
+        /**!*/
+        tr td{
+            padding: 5px 20px;
+            align-items: center;
+        }
+
+        a{
+            text-decoration: none;
+            font-size: 14px;
+            color: black;
+
+        }
+        a:hover {
+            color: blueviolet;
+            /*  鼠标点上去的颜色  */
+            text-decoration: underline;
+            /*    加上下划线*/
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <!-- 顶部区域 -->
+    <header id="header">
+        <!-- 顶部标题区域 -->
+        <div class="htitle">
+            <a href="#" target="_blank" class="location">衡阳</a>
+
+            <div class="header-info" id="login_info">
+                <div class="login-info" v-if="isLogin">
+                    <a href=" " title="点击登录" target="_blank">欢迎您:{{uname}}</a>
+                    <a href="../register.html" title="点击注册"> 免费注册 </a>
+                </div>
+                <div class="login-info" v-else>
+                    <a href="../login.html" title="点击登录">您好，请登录</a>
+                    <a href="../register.html" title="点击注册"> 免费注册 </a>
+                </div>
+
+                <div class="person-info">
+                    <span>|</span>
+                    <a href="front/order.html" target="_blank">我的订单</a>
+                    <span>|</span>
+                    <a href="back/manager/index.html" target="_blank">后台管理</a>
+                    <span>|</span>
+                    <a href="front/service.html" >客户服务</a>
+                    <span>|</span>
+                    <a href="front/Information.html">个人信息</a>
+                </div>
+
+            </div>
+        </div>
+        <a href="index.html">
+            <img src="images/logo.png" width="260px" height="120px"/>
+        </a>
+
+    </header>
+
+    <div class="content" v-if="!loginflag">
+        <b class="title">用户信息</b>
+        <ul type="">
+            <li>
+                <h3>用户名:&nbsp;&nbsp;{{nickName}}</h3>
+
+            </li>
+            <li>
+                <h3>电话:&nbsp;&nbsp;{{Tel}}</h3>
+
+            </li>
+            <li>
+                <h3>邮箱:&nbsp;&nbsp;{{email}}</h3>
+
+            </li>
+
+        </ul>
+        <input type="button" value="修改信息" @click="loginflag=!loginflag">
+    </div>
+    <!--修改信息-->
+    <div class="content" id="login" v-if="loginflag">
+        <span id="unshow" @click="loginflag=false">X</span>
+        <form name="myform">
+            <table>
+                <tr>
+                    <td class="labname"><label for="nickName">用户名：</label></td>
+                    <td><input type="text" name="nickName" placeholder="请输入新用户名"
+                               id="nickName" v-model="nickName"/></td>
+                </tr>
+                <tr>
+                    <td class="labname"><label for="pwd">密码：</label></td>
+                    <td><input type="password" name="pwd" placeholder="请输入密码"
+                               id="pwd" v-model="pwd"/></td>
+                </tr>
+                <tr>
+                    <td class="labname"><label for="pwd2">确认密码：</label></td>
+                    <td><input type="password" name="pwd2" placeholder="请确认密码"
+                               id="pwd2" v-model="pwd2"/></td>
+                </tr>
+                <tr>
+                    <td class="labname"><label for="Tel">电话：</label></td>
+                    <td><input type="text" name="Tel" placeholder="请输入电话号码"
+                               id="Tel" v-model="Tel"/></td>
+                </tr>
+                <tr>
+                    <td class="labname"><label for="email">邮箱：</label></td>
+                    <td><input type="text" name="email" placeholder="请输入邮箱"
+                               id="email" v-model="email"/></td>
+                </tr>
+                <tr>
+                    <td class="labname"><label for="yzm">验证码：</label></td>
+                    <td><input type="text" name="yzm" placeholder="请输入验证码"
+                               id="yzm" v-model="yzm"/></td>
+                    <td><img src="code.action" onclick="this.src='code.action?d=' + new Date()" id="yzm_img"/></td>
+                </tr>
+            </table>
+        </form>
+        <input type="button" value="确认修改" class="btn" id="btn" @click="updateInfo"/>
+        <input type="button" value="返回" @click="loginflag=!loginflag">
+    </div>
+
+    <!--  <div class="look">浏览记录</div> -->
+    <br>
+    <hr />
+    <br>
+    <div class="shoppingcar">
+        <div class="carbag" id="carbag">
+            <b  @click=" historyflag=!historyflag,buyHistory()">购买记录</b>
+            <table id="bagcontent" v-if="historyflag">
+                <tr>
+                    <td>
+                        商品编号
+                    </td>
+                    <td>
+                        商品名称
+                    </td>
+                    <td>
+                        价格
+                    </td>
+                    <td>
+                        购买数量
+                    </td>
+                    <td>
+                        购买时间
+                    </td>
+                </tr>
+                <tr v-for="item in data">
+                    <td>
+                        {{item.gno}}
+                    </td>
+                    <td>
+                        {{item.gname}}
+                    </td>
+                    <td>
+                        {{item.price}}
+                    </td>
+                    <td>
+                        {{item.num}}
+                    </td>
+                    <td>
+                        {{item.odate}}
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+
+
+    </div>
+    <br>
+    <hr />
+    <br>
+    <div class="look" v-if="historyflag">
+<!--        <span @click="getHistory()">浏览记录</span>-->
+<!--        <hr />-->
+<!--        <ul>-->
+<!--            <li v-for="item in reversehistory">{{item.gno}} - {{item.gname}}</li>-->
+<!--        </ul>-->
+    </div>
+
+    <footer>
+        <div class="foot_link">
+            <a href="#">关于我们</a> <span> | </span>
+            <a href="#">联系我们</a> <span> | </span>
+            <a href="#">招聘广告</a> <span> | </span>
+            <a href="#">友情链接</a>
+        </div>
+        <p>CopyRight &copy; 2019 <a class="copy" href="http://www.hyycinfo.com" target="_blank">衡阳市源辰信息科技有限公司</a> All
+            Rights
+            Reserverd</p>
+        <p>电话：0734-8355998 湘ICP备16015987号-1</p>
+    </footer>
+
+</div>
+</body>
+<script src="js/vue.js"></script>
+<script src="js/axios.js"></script>
+<script type="text/javascript">
+    let logininfo=new Vue({
+        el:"#login_info",
+        data: {
+            isLogin: false,
+            uname:'',
+        },
+        methods: {
+            logout: function () {
+                axios.post("login.action?op=logout").then(data => {
+                    var result = data.data;
+                    if (result.code == 1) {
+                        this.isLogin = false;
+                        const isLogin = {isLogin: 0}; //0代表未登录，1代表登录
+                        localStorage.setItem("Login", JSON.stringify(isLogin));
+                    }
+                });
+            }
+        },
+        created() {
+            var isLogin = JSON.parse(localStorage.getItem("Login"));
+            if (isLogin.isLogin == 1) {
+                this.isLogin = true;
+                var nickName = JSON.parse(localStorage.getItem("Username"));
+                this.uname = nickName.account;
+                return;
+            } else {
+                this.isLogin = false;
+            }
+        }
+    });
+
+    let vm = new Vue({
+        el: "#app",
+        data: {
+            information: [],//显示信息列表
+            isLogin: false,//是否登录
+            nickName: "",//用户名
+            pwd: "",
+            Tel: "",
+            email: "",
+            loginflag: false,//修改信息的开关
+            pwd2: "",//确认密码
+            yzm: "",//验证码,
+            mno: 0 , //数据库中用户id
+
+            historyflag: false,
+            data: [],//
+
+            history:[],
+            buy: {
+                gno: "",
+                gname: "",
+                price: "",
+                nums: "",
+                odate: ""
+            },
+        },
+        methods: {
+            //获取浏览记录
+            getHistory:function () {
+                axios.post("info.action?op=getHistory").then(result=>{
+                    var resultData=result.data;
+                    this.history=[];
+                    if (resultData.code==1){
+                        this.history=resultData.data;
+                    }
+                });
+            },
+            showAllInfo: function () {
+                var params = new URLSearchParams();
+                params.append("op", "info");
+                params.append("mno", this.mno);
+                axios.post("info.action", params).then(data => {
+                    var result = data.data;
+                    if (result.code == 0) {
+                        alert("请先登录！！");
+                        window.location.href="login.html";
+                        return;
+                    }
+                    this.nickName = result.data.nickName;
+                    //this.pwd = result.data.pwd;
+                    this.Tel = result.data.tel;
+                    this.email = result.data.email;
+                    this.isLogin = true;
+                });
+            },
+            updateInfo: function () {
+                var params = new URLSearchParams();
+                params.append("op", "update");
+                params.append("nickName", this.nickName);
+                params.append("pwd", this.pwd);
+                params.append("pwd2", this.pwd2);
+                params.append("Tel", this.Tel);
+                params.append("email", this.email);
+                params.append("yzm", this.yzm);
+                params.append("mno", this.mno);
+                axios.post("info.action", params).then(data => {
+                    var result = data.data;
+                    if (result.code == 0 || result.code == 2 || result.code == 3 || result.code == 4) {
+                        alert("修改失败:" + result.msg);
+                        return;
+                    }
+                    alert("修改信息成功!")
+                    location.href = 'front/Information.html';
+                })
+            },
+            buyHistory: function () {
+                var params = new URLSearchParams();
+                // alert("mno:"+this.mno);
+                params.append("op", "buyHistory");
+                params.append("mno", this.mno);
+                axios.post("info.action", params).then(data => {
+                    var result = data.data;
+                    if (result.code != 1) {
+                        //alert("没有购买记录");
+                        vm.$data.data = "还未购买商品哦!!";
+                    }
+                    this.buy.gno = result.data.gno;
+                    this.buy.gname = result.data.gname;
+                    this.buy.price = result.data.price;
+                    this.buy.nums = result.data.num;
+                    this.buy.odate = result.data.odate;
+
+                    vm.$data.data = result;
+
+                });
+            }
+        },
+
+        computed:{
+            reversehistory(){
+                return this.history.reverse();
+            }
+        },
+        mounted(){
+            this.showAllInfo();
+            this.historyflag=!this.historyflag
+            this.buyHistory();
+        },
+        created() {
+            var isLogin = JSON.parse(localStorage.getItem("Login"));
+            if (isLogin.isLogin == 1) {
+                this.isLogin = true;
+                var nickName = JSON.parse(localStorage.getItem("Username"));
+                this.nickName = nickName.account;
+                var mno = JSON.parse(localStorage.getItem("Mno"));
+                this.mno = mno.mno;
+            } else {
+                this.isLogin = false;
+            }
+
+        },
+
+    });
+
+
+</script>
+
+
+</html>

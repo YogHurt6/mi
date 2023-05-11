@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>客服服务</title>
+    <base href="../">
+    <meta name="keywords" content="小吃,美食,零食,源辰"/>
+    <meta name="description" content="各种小吃美食，应有尽有"/>
+    <link href="images/xiaomi-logo.png" rel="shortcut icon" type="image/x-icon"/>
+    <link href="css/header.css" rel="stylesheet" type="text/css"/>
+    <link href="css/footer.css" rel="stylesheet" type="text/css"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+        .box {
+            width: 100%;
+            height: 500px;
+            position: absolute;
+            top: 10px;
+            bottom: 800px;
+        }
+
+        #content {
+            width: 98%;
+            height: 500px;
+            margin-right: 1%;
+            margin-left: 1%;
+        }
+
+        form {
+            width: 100%;
+            height: 60px;
+            line-height: 40px;
+            border-top: 1px solid #ccc;
+            position: absolute;
+            top:650px;
+            bottom: 0;
+            left: 0;
+        }
+
+        #content form img {
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            padding: 2px;
+            cursor: pointer;
+            margin: 5px 0 0 5px;
+            float: left;
+            width: 40px;
+            height: 40px;
+        }
+
+        #content form input[type='text'] {
+            width: 80%;
+            height: 40px;
+            line-height: 27px;
+            border-radius: 7px;
+            border: 1px solid #ccc;
+            float: left;
+            margin-left: 5px;
+            margin-top: 5px;
+            outline: none;
+            padding: 0 5px;
+        }
+
+        #content form input[type='button'] {
+            width: 12%;
+            height: 40px;
+            border-radius: 5px;
+            background: #fff;
+            border: none;
+            margin-left: 1%;
+            cursor: pointer;
+            font-size: 27px;
+            margin-top: 5px;
+        }
+
+        .info_box {
+            width: 100%;
+            height: 600px;
+            overflow-y: auto;
+        }
+
+        .info_box::-webkit-scrollbar {
+            display: none
+        }
+
+        .info_box div {
+            margin: 0 0 5px;
+            position: relative;
+        }
+
+        .info_box .info_r {
+
+        }
+
+        .info_box .info_l {
+
+        }
+
+        .info_box .info_l img {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .info_box .info_r img {
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        .info_box .info_l span {
+            margin-left: 60px;
+            margin-top: 16px;
+        }
+
+        .info_box .info_r span {
+            margin-left: 28%;
+            margin-top: 16px;
+        }
+
+
+        .info_box span {
+            width: 66%;
+            height: auto;
+            font-size: 14px;
+            background: #ddd;
+            border-radius: 10px;
+            padding: 8px;
+            color: #333;
+            display: block;
+            position: relative;
+            top: 0;
+        }
+
+
+        .info_box .info_l img {
+            float: left;
+            width: 50px;
+            height: 50px;
+        }
+
+
+        .info_r img {
+            float: right;
+            width: 50px;
+            height: 50px;
+        }
+
+
+    </style>
+</head>
+
+
+<body>
+
+
+<div class="box" id="app">
+    <div id="content">
+        <div class="info_box">
+
+
+            <a href="index.html">
+                <img src="images/logo.png" width="260px" height="60px" @click="reback"/>
+            </a>
+
+
+            <div class="info_l">
+                <img src="images/icon1.jpg" class='pic_l'>
+                <span class='infoo'>
+                    亲，您好！AI小美很高兴为您服务！请问有什么可以为您效劳的呢？
+                    <br>
+                    您可以输入数字快速询问我关于下面的问题哦！
+                    <br>
+                    1.我的快递什么时候发货？
+                    <br>
+                    2.发什么快递？
+                    <br>
+                    3.我的快递什么时候能到？
+                    <br>
+                    4.误操作了\买错了怎么办？
+                    <br>
+                    5.忘记密码了怎么办？
+                    <br>
+                    0.其他
+                </span>
+            </div>
+            <!--            <div class="info_r">-->
+            <!--                <img src="img/2.jpg" class='pic_r'>-->
+            <!--                <span class='infor'>Python是一种跨平台的计算机程序设计语言。是一种面向对象的动态类型语言，最初被设计用于编写自动化脚本(shell)，随着版本的不断更新和语言新功能的添加，越来越多被用于独立的、大型项目的开发。</span>-->
+            <!--            </div>-->
+
+        </div>
+        <form action="">
+            <img src="images/icon1.jpg" id='pic'>
+            <input type="text" placeholder='请输入您的问题' id='inp'>
+            <input type="button" value='发送' id='send'>
+        </form>
+    </div>
+</div>
+</body>
+
+<script src="js/vue.js"></script>
+<script src="js/axios.js"></script>
+<script type="text/javascript">
+    let vm = new Vue({
+        el: "#app",
+        data: {
+            isLogin: false,
+        },
+
+        created() {
+            var isLogin = JSON.parse(localStorage.getItem("Login"));
+            if (isLogin.isLogin == 1) {
+                this.isLogin = true;
+            } else {
+                this.isLogin = false;
+            }
+        },
+    });
+
+</script>
+
+<script>
+
+
+    var send = document.getElementById('send');
+    var pic = document.getElementById('pic');
+    var txt = document.getElementById('inp');
+    var info_box = document.getElementsByClassName('info_box')[0];
+
+    var onoff = true;
+    pic.onclick = function () {
+        if (onoff) {
+            pic.src = "images/icon1.jpg";
+            onoff = false;
+        } else {
+            pic.src = "images/icon1.jpg";
+            onoff = true;
+        }
+    };
+
+    send.onclick = function () {
+        if (txt.value === '') {
+            alert('请输入内容');
+        } else {
+
+            var nDiv = document.createElement('div');
+            var spans = document.createElement('span');
+            var imgs = document.createElement('img');
+            var sTxt = document.createTextNode(txt.value);
+            var info_box = document.getElementsByClassName('info_box')[0];
+            spans.appendChild(sTxt);
+            nDiv.appendChild(spans);
+            nDiv.appendChild(imgs);
+            // nDiv.style.display='block';
+            info_box.insertBefore(nDiv, info_box.lastChild);
+            spans.className = 'infor';
+            nDiv.className = 'info_r';
+            imgs.src = "images/icon1.jpg";
+
+            var nDiv = document.createElement('div');
+            var spans = document.createElement('span');
+            var imgs = document.createElement('img');
+
+            if (txt.value == "1") {
+                var sTxt = document.createTextNode("宝,本店宝贝拍下后会在72小时候发出的哦，请您耐心等待~");
+            } else if (txt.value == "2") {
+                var sTxt = document.createTextNode("亲,我们合作的快递是中通、圆通、韵达、申通呢！因为活动期间快递很多，有的地区可能会出现爆仓现象，请您理解并耐心地等待哦，谢谢。");
+            } else if (txt.value == "3") {
+                var sTxt = document.createTextNode("亲,快递一般情况下3-5天左右可以到达。节假日、自然灾害、交通意外、较偏远地区等，均有可能发生到货时间延迟的情况");
+            } else if (txt.value == "4") {
+                var sTxt = document.createTextNode("亲,这边建议您拨打客服热线,客服在线帮您取消订单");
+            } else if (txt.value == "5") {
+                var sTxt = document.createTextNode("亲,忘记密码可以在登录界面点击->忘记密码->输入您的账号和邮箱->重新设置您的密码~");
+            } else {
+                var sTxt = document.createTextNode("亲,这些问题小美也无法解决呢,这边建议您拨打客服热线,客服在线帮您解决问题>_<");
+            }
+
+
+            var info_box = document.getElementsByClassName('info_box')[0];
+            spans.appendChild(sTxt);
+            nDiv.appendChild(spans);
+            nDiv.appendChild(imgs);
+            // nDiv.style.display='block';
+            info_box.insertBefore(nDiv, info_box.lastChild);
+            spans.className = 'infol';
+            nDiv.className = 'info_l';
+            imgs.src = "images/icon1.jpg";
+
+        }
+        txt.value = '';
+    }
+</script>
+
+
+</html>

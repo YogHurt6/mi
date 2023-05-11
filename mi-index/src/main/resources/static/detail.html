@@ -1,0 +1,324 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>小米商城商品详细</title>
+<meta name="keywords" content="小吃,美食,零食,源辰" />
+<meta name="description" content="各种小吃美食，应有尽有" />
+<link href="images/xiaomi-logo.png" rel="shortcut icon" type="image/x-icon" />
+<link href="css/header.css" rel="stylesheet" type="text/css" />
+<link href="css/index.css" rel="stylesheet" type="text/css" />
+<link href="css/footer.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="css/detail.css" type="text/css" >
+</head>
+
+<body>
+<!-- 顶部区域 -->
+<header id="header">
+	<!-- 顶部标题区域 -->
+	<div class="htitle">
+		<a href="#" target="_blank" class="location">衡阳</a>
+
+		<div class="header-info" id = "login_info">
+			<div class="login-info" v-if = "isLogin">
+				<a href="index.html" title="点击登录" target="_blank">欢迎您:{{uname}} <a href="" @click.prevent="logout()">退出</a></a>
+
+			</div>
+			<div class="login-info" v-else>
+				<a href="login.html" title="点击登录" >您好，请登录</a>
+				<a href="register.html" title="点击注册"> 免费注册 </a>
+			</div>
+
+			<div class="person-info">
+				<span>|</span>
+				<a href="front/order.html" target="_blank">我的订单</a>
+				<span>|</span>
+				<a href="back/index.html" target="_blank">后台管理</a>
+				<span>|</span>
+				<a href="front/service.html" target="_blank">客户服务</a>
+				<span>|</span>
+				<a href="front/Information.html" target="_blank">个人信息</a>
+			</div>
+
+		</div>
+	</div>
+
+	<!-- 顶部搜索区域 -->
+	<div class="search">
+		<div class="search_left">
+			<a href="index.html" title="首页">
+				<img src="images/logo.png" width="260px" height="120px"/>
+			</a>
+		</div>
+
+		<div class="search_right" id="search_item">
+			<div class="search_top">
+				<div class="search_div">
+					<input type="search" class="search-ipt" placeholder="请输入要搜索的内容" />
+					<input type="button" class="search-btn"/>
+				</div>
+				<div class="buycart">
+					<i class="iconfont">{{cartCount}}</i>
+					<a href="front/cart.html" >我的购物车</a>
+				</div>
+			</div>
+
+			<div class="search_item" >
+				<a href = "index.html" data-tno="" class = "selected" >全部</a>
+				<a v-for="(type, index) in types" :data-tno="type.tno " href = "index.html" >{{type.tname}}</a>
+			</div>
+		</div>
+	</div>
+</header>
+
+<div id = "app">
+	<!-- 面包屑导航 -->
+	<div class="breadcrumb" id="breadcrumb">
+		<a href="javascript:void(0)">全部分类</a>
+		<span>&gt;</span>
+		<a href="javascript:void(0)" id="goods_type">{{goods.gname}}</a>
+		<span>&gt;</span>
+		<a href="javascript:void(0)">商品详情</a>
+	</div>
+
+	<!-- 商品展示 -->
+
+	<div class="goods_details_con clearfix">
+		<div class="goods_details_pic fl">
+			<img v-for="pic in pics" :src="pic" id = "goods_pics">
+		</div>
+		<div class="goods_details_list fr">
+			<h3>{{goods.gname}}</h3>
+			<p>{{goods.intro}}</p>
+			<div class="price_bar">
+				<span class="show_price">&yen;<em>{{goods.price}}</em>元</span>
+			</div>
+			<div class="goods_num clearfix">
+				<div class="num_name fl">数量：</div>
+				<div class="num_add fl">
+					<input type="text" class="num_show fl" v-model = "nums" id="goods_count">
+					<a href="javascript:void(0)" class="add fr" @click = "addNum(1)">+</a>
+					<a href="javascript:void(0)" class="minus fr" @click = "addNum(-1)">-</a>
+				</div>
+				<div class="balance_cls">仓库量<span id="store_num">{{goods.balance}}</span> {{goods.unit}}</div>
+			</div>
+			<div class="total" v-html ="'总价：' +(goods.price * nums).toFixed(2) + '元'"></div>
+			<div class="operate_btn">
+				<a href="javascript:gotopay();" class="buy_btn" id="buy_btn">立即购买</a>
+				<a href="javascript:void(0);" class="add_cart" id="add_cart" @click="addCart()">加入购物车</a>
+			</div>
+		</div>
+	</div>
+
+	<!-- 商品详情 -->
+	<div class="main_wrap clearfix">
+		<div class="l_wrap fl clearfix">
+			<div class="new_goods">
+				<h3>新品推荐</h3>
+				<ul>
+					<li>
+						<a href="#"><img src="images/goods/good01.jpg"></a>
+						<h4><a href="#">零食大礼包</a></h4>
+						<div class="prize">&yen;3.90</div>
+					</li>
+					<li>
+						<a href="#"><img src="images/goods/good02.jpg"></a>
+						<h4><a href="#">多味泡泡糖</a></h4>
+						<div class="prize">&yen;16.80</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="r_wrap fr clearfix">
+			<ul class="detail_tab clearfix">
+				<li class="one active" @click="change()">商品介绍</li>
+<!--				<li class="two">评论</li>-->
+<!--				<li class="three">推荐</li>-->
+			</ul>
+
+			<div class="tab_content">
+				<ul>
+					<li>
+						<dt>商品详情：</dt>
+						<dd v-html = "goods.descr">{{goods.descr}}</dd>
+					</li>
+				</ul>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div class="popup_con">
+	<div class="popup">
+		<p id = "popup_info"></p>
+	</div>
+</div>
+<!-- 版权所有 -->
+<footer>
+	<div class="foot_link">
+		<a href="#">关于我们</a> <span> | </span>
+		<a href="#">联系我们</a> <span> | </span>
+		<a href="#">招聘广告</a> <span> | </span>
+		<a href="#">友情链接</a>
+	</div>
+	<p>CopyRight &copy; 2019 <a class="copy" href="http://www.hyycinfo.com" target="_blank">衡阳市源辰信息科技有限公司</a> All Rights Reserverd</p>
+	<p>电话：0734-8355998 湘ICP备16015987号-1</p>
+</footer>
+<script src="js/jquery-3.4.1.min.js"></script>
+<script src="js/vue.js" type="text/javascript"></script>
+<script src="js/axios.js" s="text/javascript"></script>
+<script src="js/qs.js" type="text/javascript"></script>
+<script src="js/checklogin.js" type="text/javascript"></script>
+<script src="js/getcartinfo.js" type="text/javascript"></script>
+<script>
+
+
+	let app = new Vue({
+		el: "#app",
+		data: {
+			goods: {},
+			nums: 1,
+			pics: []
+		},
+		mounted: function(){
+			axios.all( [findGoodsByGno()] ).then(axios.spread((result) => {
+				if(result.status == 200){
+					console.log(result)
+					this.goods = result.data.data.dataset[0];
+					this.pics = result.data.data.dataset[0].pics.split(",");
+					this.$nextTick(function(){	//第一次渲染完成后要执行的代码
+						showPics();
+					})
+				}
+			}))
+		},
+		methods:{
+			change: function(){
+				$("#one active").removeClass("active");
+			},
+			addNum: function(num){
+				if(num == -1 && this.nums == 1){	//说明不能减了
+					return;
+				}
+
+				if(num == 1 && this.goods.balance <= this.nums){	//说明不能加了
+					return;
+				}
+				this.nums = parseInt( this.nums) + num;
+			},
+			addCart: function(){
+				//判断用户是否已经登录
+				// if(!login.$data.loginId){	//如果为空，则说明没有登录
+				// 	showMsg("请先登录",function() {location.href = "login.html"});
+				// 	return;
+				// }
+
+				//判断这个商品是否已经在购物车
+				if(types.$data.cartCount > 0){	//说明当前用户信息已经存在
+					let Icarts = types.$data.carts;	//获取当前用户的购物车信息
+					for(let i = 0, len = Icarts.length; i < len; i++){
+						if(Icarts[i].gno == this.goods.gno){	//说明这个商品在购物车里面已经存在 , cno:Icarts[i].cno
+							var mno1 = JSON.parse(localStorage.getItem("Mno"));
+							var mno = mno1.mno;
+							if (mno==''){
+								showMsg("请先登录",function () {})
+								return;
+							}
+							var params=new URLSearchParams();
+							params.append("op","add");
+							params.append("mno",mno);
+							params.append("gno",this.goods.gno)
+							params.append("num",this.nums)
+							axios.post("cart.action", params).then(result => {
+								if(result.data.code==1){
+									showMsg("加入购物车成功。。。", function() {});
+									return;
+								}else{
+									showMsg("加入购物车失败。。。", function() {});
+								}
+							})
+							return;
+						}
+					}
+				}
+				//判断是否登录
+				var mno1 = JSON.parse(localStorage.getItem("Mno"));
+				if(mno1==null){
+					showMsg("加入购物车失败,请登录！！", function() {});
+					//window.location.href="login.html";
+					localStorage.clear();
+				}
+				var mno = mno1.mno;
+				//要么这个商品没有在购物车里面，要么就是购物车里面还没有东西 , mno:login.$data.loginId
+				axios.post("cart.action", qs.stringify({op:"add", gno:this.goods.gno , num:this.nums,mno:mno})).then(result =>{
+					if(result.status == 200){
+						console.log(result)
+						types.$data.cartCount = types.$data.cartCount + 1;	//购物车中的商品信息+1
+						let newObj = {};
+						newObj.cno = result.data.data[0].good;
+						newObj.gno = this.goods.gno;
+						types.$data.carts.push(newObj);
+						localStorage.setItem("cnos","1");
+						showMsg("加入购物车成功。。。", function() {});
+					}else{
+						showMsg("加入购物车失败。。。", function() {});
+					}
+				})
+			}
+		}
+	})
+
+	function findGoodsByGno(){
+		var gno = location.search;
+		if(gno == ""){	//说明没有带商品信息，则不满足需求，那么我们就跳到首页
+			location.href = "index.html";
+		}
+		gno = gno.replace("?", "").trim();
+		console.log(gno)
+		return axios.post("goods.action", qs.stringify({op:"findByGno", gno:gno}));
+	}
+
+	function showPics(){
+		var imglen = $("#goods_pics>img").length;
+		if(imglen > 1){	//说明有多张，则需要轮播
+			var i = 0;
+			setInterval(() => {
+				$("goods_pics>img").css("display", "none");
+				$("goods_pics>img").eq(i).css("display", "block");
+				i = (i+1) % imglen;
+			}, 2000);
+		}
+	}
+
+	function gotopay(){
+		var mno1 = JSON.parse(localStorage.getItem("Mno"));
+		if(mno1==null){
+			showMsg("购买失败,请登录！！", function() {});
+			//window.location.href="login.html";
+			localStorage.clear();
+			return;
+		}
+		axios.post("cart.action", qs.stringify({op:"add", gno:app.$data.goods.gno , num:app.$data.nums})).then(result =>{
+			if(result.status == 200){
+				console.log(result)
+				types.$data.cartCount = types.$data.cartCount + 1;	//购物车中的商品信息+1
+				let newObj = {};
+				newObj.cno = result.data.data[0].good;
+				newObj.gno = this.goods.gno;
+				types.$data.carts.push(newObj);
+			}
+		})
+		localStorage.removeItem("gnos");
+		localStorage.setItem("gnos", app.$data.goods.gno);
+		location.href =  "front/pay.html";
+	}
+
+
+
+
+
+</script>
+</body>
+</html>

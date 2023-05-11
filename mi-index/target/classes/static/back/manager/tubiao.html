@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<title></title>
+<head>
+ <div id="appb">
+     <button @click="qiehua()">切换</button>
+    <div style="width: 800px; height: 500px;display: inline-block">
+        <div id="container" style="height: 100%; width: 100%;" ></div>
+    </div>
+     <div style="width: 500px; height: 500px;display: inline-block">
+         <div id="container1" style="height: 100%; width: 100%;" ></div>
+     </div>
+ </div>
+
+<script>
+    let vm=new Vue({
+        el:"#appb",
+        data:{
+       fff:0
+        },
+        methods:{
+            qiehua:function(){
+                if(this.fff==0){
+                    this.lines()
+                    this.fff=1
+                }else if(this.fff==1){
+                    this.huan()
+                    this.fff=2
+                }else {
+                    this.querySaleData()
+                    this.fff=0
+                }
+            },
+            select:function(){
+                axios.get("../../statement.action?op=select").then(result=> {
+                    if (result.data.code == 1) {
+                        var dom = document.getElementById('container1');
+                        var myChart = echarts.init(dom,null,{
+                            renderer: 'canvas',
+                            useDirtyRect: false
+                        });
+                        var option;
+                        option = {
+                            title: {
+                                text: '产品类型销售占比',
+                                subtext: '',
+                                left: 'center'
+                            },
+                            tooltip: {
+                                trigger: 'item'
+                            },
+                            legend: {
+                                orient: 'vertical',
+                                left: 'left'
+                            },
+                            series: [{
+                                name: '产品名',
+                                type: 'pie',
+                                radius: '50%',
+                                 data:result.data.data,
+                                emphasis: {
+                                    itemStyle: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0,0,0,0.5)'
+                                    }
+                                }
+                            }]
+                        };
+                        if (option && typeof option === 'object') {
+                            myChart.setOption(option);
+                        }
+                        window.addEventListener('resize', myChart.resize);
+                    }
+                });
+            },
+            querySaleData:function () {
+                axios.get("../../statement.action?op=querySaleData").then(result=>{
+                    if(result.data.code==1) {
+                        var dom = document.getElementById("container");
+                        var myChart = echarts.init(dom, null, {
+                            renderer: 'canvas',
+                            useDirtyRect: false
+                        });
+
+                        var option;
+                        let month = [];
+                        let prices = [];
+                        for (let i = 0; i < result.data.data.length; i++) {
+                            month.push(result.data.data[i].month);
+                            prices.push(result.data.data[i].price)
+                        }
+                        option = {
+                            title: {
+                                text: '2020年月份销售情况',
+                            },
+                            xAxis: {
+                                name:"月份",
+                                type: 'category',
+                                data: month
+                            },
+                            yAxis: {
+                                name:"金额",
+                                nameLocation:'end',
+                                type: 'value',
+                                // /*改变xy轴颜色*/
+                                // axisLine: {
+                                //     lineStyle: {
+                                //         color: '#e33b38',
+                                //         width: 1, //这里是为了突出显示加上的
+                                //     }
+                                // }
+                            },
+                            series: [{
+                                data: prices,
+                                type: 'bar',
+                                itemStyle: {
+                                    normal: {
+                                        label: {
+                                            show: true, //开启显示
+                                            position: 'top', //在上方显示
+                                            textStyle: { //数值样式
+                                                color: 'black',
+                                                fontSize: 16
+                                            }
+                                        }
+                                    }
+                                }
+                            }]
+                        };
+                        if (option && typeof option === 'object') {
+                            myChart.setOption(option);
+                        }
+                        window.addEventListener('resize', myChart.resize);
+                    }
+                });
+            },
+            lines:function () {
+                axios.get("../../statement.action?op=querySaleData").then(result=>{
+                    if(result.data.code==1) {
+                        var dom = document.getElementById("container");
+                        var myChart = echarts.init(dom, null, {
+                            renderer: 'canvas',
+                            useDirtyRect: false
+                        });
+
+                        var option;
+                        let month = [];
+                        let prices = [];
+                        for (let i = 0; i < result.data.data.length; i++) {
+                            month.push(result.data.data[i].month);
+                            prices.push(result.data.data[i].price)
+                        }
+                        option = {
+                            xAxis: {
+                                type: 'category',
+                                data: month
+                            },
+                            yAxis: {
+                                type: 'value'
+                            },
+                            series: [
+                                {
+                                    data: prices,
+                                    type: 'line'
+                                }
+                            ]
+                        };
+                        // option = {
+                        //     title: {
+                        //         text: '2020年月份销售情况',
+                        //     },
+                        //     xAxis: {
+                        //         name:"月份",
+                        //         type: 'category',
+                        //         data: month
+                        //     },
+                        //     yAxis: {
+                        //         name:"金额",
+                        //         nameLocation:'end',
+                        //         type: 'value',
+                        //         // /*改变xy轴颜色*/
+                        //         // axisLine: {
+                        //         //     lineStyle: {
+                        //         //         color: '#e33b38',
+                        //         //         width: 1, //这里是为了突出显示加上的
+                        //         //     }
+                        //         // }
+                        //     },
+                        //     series: [{
+                        //         data: prices,
+                        //         type: 'bar',
+                        //         itemStyle: {
+                        //             normal: {
+                        //                 label: {
+                        //                     show: true, //开启显示
+                        //                     position: 'top', //在上方显示
+                        //                     textStyle: { //数值样式
+                        //                         color: 'black',
+                        //                         fontSize: 16
+                        //                     }
+                        //                 }
+                        //             }
+                        //         }
+                        //     }]
+                        // };
+                        if (option && typeof option === 'object') {
+                            myChart.setOption(option);
+                        }
+                        window.addEventListener('resize', myChart.resize);
+                    }
+                });
+            },
+            huan:function () {
+                axios.get("../../statement.action?op=querySaleData").then(result=> {
+                    if (result.data.code == 1) {
+                        var dom = document.getElementById('container');
+                        var myChart = echarts.init(dom,null,{
+                            renderer: 'canvas',
+                            useDirtyRect: false
+                        });
+                        let chart = echarts.init(document.getElementById('container'));
+                        chart.clear(); // 清空图表
+                        var option;
+                        option = {
+                            title: {
+                                text: '2020年月销售额分布图',
+                                left: 'left'
+                            },
+                            tooltip: {
+                                trigger: 'item'
+                            },
+                            legend: {
+                                top: '5%',
+                                left: 'center'
+                            },
+                            series: [
+                                {
+                                    name: '月销售额',
+                                    type: 'pie',
+                                    radius: ['40%', '70%'],
+                                    avoidLabelOverlap: false,
+                                    label: {
+                                        show: false,
+                                        position: 'center'
+                                    },
+                                    emphasis: {
+                                        label: {
+                                            show: true,
+                                            fontSize: '40',
+                                            fontWeight: 'bold'
+                                        }
+                                    },
+                                    labelLine: {
+                                        show: false
+                                    },
+                                    data: result.data.data
+                                }
+                            ]
+                        };
+                        if (option && typeof option === 'object') {
+                            myChart.setOption(option);
+                        }
+                        window.addEventListener('resize', myChart.resize);
+                    }
+                });
+            }
+        },
+        mounted(){
+          axios.all([this.querySaleData() ,this.select()])
+        }
+    });
+</script>
+</head>
+    </body>
+</html>

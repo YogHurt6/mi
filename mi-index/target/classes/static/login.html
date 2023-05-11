@@ -1,0 +1,261 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>小米商城-登录</title>
+    <meta name="keywords" content="小吃,美食,零食,源辰"/>
+    <meta name="description" content="各种小吃美食，应有尽有"/>
+    <link href="images/xiaomi-logo.png" rel="shortcut icon" type="image/x-icon"/>
+    <link href="css/login.css" rel="stylesheet" type="text/css"/>
+    <link href="css/footer.css" rel="stylesheet" type="text/css"/>
+    <style>
+
+    </style>
+</head>
+
+<body>
+<header>
+    <a href="index.html" target="_blank"><img src="images/logo.png" alt="logo" title="点击进入零食网"/></a>
+</header>
+
+<article>
+    <div class="loginarea" id="app">
+        <div class="item">
+            <h1>源辰会员 <a href="register.html">立即注册</a></h1>
+        </div>
+
+        <div class="item item-border">
+            <label for="account" class="login_label"></label>
+            <input type="text" class="ipt" name="account" v-model="account" @blur="checkInfo(0)" id="account"
+                   @focus="clearmsg" placeholder="邮箱/用户名/已验证的手机"/>
+            <span class="clear_btn" @click="clearAccount()"></span>
+        </div>
+
+        <div class="item item-border">
+            <label for="pwd" class="login_label pwd_label"></label>
+            <input type="password" maxlength="18" class="ipt" name="pwd" v-model="pwd" @blur="checkInfo(1)" id="pwd"
+                   @focus="clearmsg" placeholder="密码"/>
+            <span class="clear_btn" @click="clearPwd()"></span>
+        </div>
+
+        <div class="item item-border">
+            <label for="code" class="login_label pwd_label"></label>
+            <input type="text" maxlength="4" class="ipt1" name="code" v-model="valcode" @blur="checkInfo(2)" id="code"
+                   @focus="clearmsg" placeholder="验证码"/>
+            <img class="code" src="code.action" onclick="this.src='code.action?d=' + new Date()">
+        </div>
+
+        <div class="item item2">
+            <input type="checkbox" id="auto" v-model="isRemember">
+            <label for="auto">记住密码</label>
+            <a href="front/forget.html">忘记密码</a>
+        </div>
+
+        <div class="item">
+            <span style="color: red">{{info}}</span>
+            <a href="javascript:void(0)" @click="login()" class="btn_img">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</a>
+        </div>
+
+        <div class="item item3">
+            <ul>
+                <li><a href="#"><span></span>QQ</a></li>
+                <li><span></span></li>
+                <li><a href="#"><span></span>微信</a></li>
+            </ul>
+        </div>
+    </div>
+</article>
+<footer>
+    <div class="foot_link">
+        <a href="#">关于我们</a> <span> | </span>
+        <a href="#">联系我们</a> <span> | </span>
+        <a href="#">招聘广告</a> <span> | </span>
+        <a href="#">友情链接</a>
+    </div>
+    <p>CopyRight &copy; 2019 <a class="copy" href="http://www.hyycinfo.com" target="_blank">衡阳市源辰信息科技有限公司</a> All Rights
+        Reserverd</p>
+    <p>电话：0734-8355998 湘ICP备16015987号-1</p>
+</footer>
+<script src="js/jquery-3.4.1.min.js" type="text/javascript"></script>
+<script src="js/vue.js" type="text/javascript"></script>
+<script src="js/axios.js" type="text/javascript"></script>
+<script src="js/qs.js" type="text/javascript"></script>
+<script type="text/javascript">
+    let vm = new Vue({
+        el: "#app",
+        data: {
+            account: "",
+            pwd: "",
+            valcode: "",
+            status: [false, false, false],	//标识账号，密码和验证码是否通过验证123 226580
+            info: "",// 提示信息的
+            isLogin: false,
+            mno: 0,
+            isRemember: ""//是否记住密码
+        },
+        methods: {
+            clearAccount: function () {
+                this.account = "";
+            },
+            clearPwd: function () {
+                this.pwd = "";
+            },
+            checkInfo: function (flag) {
+                var correct = false;
+                // if (flag == 0) {   //说明是验证账号226580 123
+                //     let reg1 = /^1(3|4|5|6|7|8|9)\d{9}$/; //验证手机号格式
+                //     let reg2 = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/; //验证邮箱格式
+                //     let reg3 = /^[\u4e00-\u9fff\w]{2,16}$/; //汉字
+                //
+                //     if (!(reg1.test(this.account)) || reg2.test(this.account) || reg3.test(this.account)) {	//说明检验不通过
+                //         this.info = "账号格式错误，请重新输入。。。";
+                //         correct = false;
+                //     } else {
+                //         correct = true;
+                //     }
+                //
+                // } else if (flag == 1) {	//说明是验证密码
+                //     let reg = /^[\w@!%]{6, 15}$/;
+                //     if (reg.test(this.pwd)) {
+                //         correct = true;
+                //     } else {
+                //         this.info = "密码格式错误，请重新输入"
+                //         correct = false;
+                //     }
+                //
+                // } else if (flag == 2) {	//说明是验证码
+                //     let reg = /^\w{4}$/;
+                //     if (reg.test(this.code)) {
+                //         correct = true;
+                //     } else {
+                //         this.info = "验证码格式错误，请重新输入"
+                //         correct = false;
+                //     }
+                // }
+                //修改数组里的值必须这样写，否则不会及时渲染
+                Vue.set(this.status, flag, correct);
+            },
+            clearmsg: function () {
+                this.info = "";
+            },
+            login: function () {
+                var params = new URLSearchParams();
+                params.append("op", "login");
+                params.append("account", this.account);
+                params.append("pwd", this.pwd);
+                params.append("valcode", this.valcode);
+                if ($.inArray(false, this.status) > 0) {
+                    this.info = "您输入的信息有误， 请重新提交...";
+                    console.info(this.status);
+                    return;
+                }
+                axios.post("login.action", qs.stringify({
+                    op: "login",
+                    nickName: this.account,
+                    pwd: this.pwd,
+                    realName: this.code,
+                    valcode: this.valcode
+                })).then(result => {	//vue的axios里面默认发送请求时的参数格式为json格式，这样的后台没法识别，需要通过qs.stringify()方法
+                    // if (result.status == 200) {
+                    //     if (result.data.code == 200) {	//说明请求成功
+                    //         //获取来源的地址，即是从哪个页面来的
+                    //         var temp = document.referrer;
+                    //         if (temp == "" || temp.indexOf("register.html") > 0) {	//如果你是直接进入的或者从注册界面过来的
+                    //             location.href = "index.html";
+                    //         } else {
+                    //             location.href = temp;
+                    //         }
+                    //     } else if (result.data.code == 501) {
+                    //         this.info = "验证码错误..."
+                    //         Vue.set(this.status, 1, false);
+                    //     } else {
+                    //         this.info = "账号密码错误，请重新输入";
+                    //         Vue.set(this.status, 1, false);
+                    //     }
+                    // } else {
+                    //     this.info = "请求失败， 请检查你的网络";
+                    // }
+                    if
+                    (result.data.code == 3) {
+                        // alert("验证码为空");
+                        // return;
+                    } else if (result.data.code == 2) {
+                        // alert("验证码错误");
+                        // return;
+                    } else if
+                    (result.data.code == 0) {
+                        alert("用户名或密码错误,请重新输入");
+                        return;
+                    } else if (result.data.code == 1) {
+                        this.mno = result.data.data.mno;
+                        const isLogin = {isLogin: 1}; //0代表未登录，1代表登录
+                        const uname = {account: this.account};
+                        const mno = {mno: this.mno};
+                        localStorage.setItem("Login",JSON.stringify(isLogin));
+                        localStorage.setItem("Username", JSON.stringify(uname));
+                        localStorage.setItem("Mno", JSON.stringify(mno));
+                        this.isLogin = true;
+
+                        this.setCookie('token',result.token);
+
+
+                        // 储存登录信息
+                        this.setUserInfo();
+
+                        alert("登录成功,欢迎您:" + this.account);
+                        location.href = 'index.html';
+
+                    }
+                })
+            },
+            // 储存表单信息
+            setUserInfo: function () {
+                // 判断用户是否勾选记住密码，如果勾选，向cookie中储存登录信息，
+                // 如果没有勾选，储存的信息为空
+                if (this.isRemember) {
+                    this.setCookie("account", this.account)
+
+                    this.setCookie("remember", this.pwd)
+                } else {
+                    this.setCookie("account", "")
+                    this.setCookie("pwd", "")
+                }
+            },
+            // 获取cookie
+            getCookie: function (key) {
+                if (document.cookie.length > 0) {
+                    var start = document.cookie.indexOf(key + '=')
+                    if (start !== -1) {
+                        start = start + key.length + 1
+                        var end = document.cookie.indexOf(';', start)
+                        if (end === -1) end = document.cookie.length
+                        return unescape(document.cookie.substring(start, end))
+                    }
+                }
+                return ''
+            },
+            // 保存cookie
+            setCookie: function (cName, value, expiredays) {
+                var exdate = new Date()
+                exdate.setDate(exdate.getDate() + expiredays)
+                document.cookie = cName + '=' + decodeURIComponent(value) +
+                    ((expiredays == null) ? '' : ';expires=' + exdate.toGMTString())
+            },
+        },
+        created() {
+            const isLogin = {isLogin: 0};
+            sessionStorage.setItem("Login", JSON.stringify(isLogin));
+
+            let account = this.getCookie("account");
+            let pwd = this.getCookie("remember");
+            if (account) {
+                this.account = account;
+                this.pwd = pwd;
+                this.isRemember = true;
+            }
+        }
+    })
+
+</script>
+</body>
+</html>

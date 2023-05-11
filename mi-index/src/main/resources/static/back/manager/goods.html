@@ -1,0 +1,282 @@
+<table id="goods_data" data-option = "fit:true"></table>
+<div id="lll">
+<div id ="goods_search">
+	<a href="javascript:showAddGoodsInfoDiaLog()" class = "easyui-linkbutton" data-options="iconCls:'icon-add', plain:true" style="float:left">添加</a>
+	<div class="datagrid-btn-separator"></div>
+	<a href="javascript:showUpdateGoodsInfoDiaLog()" class = "easyui-linkbutton" data-options="iconCls:'icon-edit', plain:true" style="float:left">修改</a>
+	<div class="datagrid-btn-separator"></div>
+	<label>商品类型</label>
+	<select id = "goods_search_tno">
+		<option value = "">--请选择--</option>
+	</select>
+	<label>商品名称</label>
+	<input type = "text" id = "goods_search_gname">
+	<label>库存量</label>
+	<input type = "number" id = "goods_search_start">
+	<label>-</label>
+	<input type = "number" id = "goods_search_end">
+	<a href="javascript:searchGoodsInfo()" class = "easyui-linkbutton" data-options = "iconCls:'icon-search'">查询</a>
+</div>
+
+<!-- 商品添加或更新 -->
+<div id="goods_dialog" class="easyui-dialog" data-options="closed:true" >
+	<form id = "goods_form">
+	<ul>
+		<li>
+			<label>商品类型</label>
+			<input id ="goods_form_gtype" class="myipt" type="text" placeholder="请输入商品类型.." v-model="tno"/>
+
+		</li>
+		<li>
+			<label>商品名称</label>
+			<input id ="goods_form_gname" class="myipt" type="text" placeholder="请输入商品名称.." v-model="gname"/>
+		</li>
+		<li>  
+			<label>商品价格</label>
+			<input id ="goods_form_price" class="myipt" type="text" min= "1" placeholder="请输入商品价格.." v-model="price"/>
+		</li>
+		<li>
+			<label>商品库存</label>
+			<input id ="goods_form_balance" class="myipt" type="number"  min = "1" placeholder="请输入商品库存.." v-model="balance"/>
+		</li>
+		<li>
+			<label>商品出售日期</label>
+			<input id ="goods_form_qperied" class="myipt" type="text" placeholder="请输入商品保质期.." v-model="qperied"/>
+		</li>
+		<li>
+			<label>商品图片</label>
+			<input type = "file" id ="goods_form_pics" name = "pics"  multiple = "multiple" onchange = "setImagePreviews(this, 'goods_show_pics')"/>
+		</li>
+		<li id = "goods_show_pics" class = "goods_content">
+			
+		</li>
+		<li class = "goods_content">
+			<label>商品简介</label>
+			<textarea rows="4" cols="120" id = goods_form_intro v-model="intro"></textarea>
+		</li>
+		<li class = "goods_content">
+			<label>商品详细</label>
+			<textarea name = "goods_form_descr" id = "goods_form_descr" rows="10" cols="80" v-model="descr"></textarea>
+		</li> 
+	</ul>	
+	</form>
+	
+</div>
+	<div>
+	<tr>
+		<th>商品编号</th>
+		<th>商品名</th>
+		<th>商品类型</th>
+		<th>价格</th>
+		<th>库存</th>
+		<th>发售日期</th>
+		<th>状态</th>
+	</tr>
+	<tr v-for="data in message">
+		<td>{{data.gno}}</td>
+		<td>{{data.gname}}</td>
+		<td>{{data.tno}}</td>
+		<td>{{data.price}}</td>
+		<td>{{data.intro}}</td>
+		<td>{{data.balance}}</td>
+		<td>{{data.qperied}}</td>
+		<td>{{data.status}}</td>
+	</tr>
+	</div>
+</div>
+
+<style>
+#goods_form li{
+	float: left;
+	width: 50%;
+	list-style: none;
+	margin-top:20px
+}
+
+#goods_form li>label {
+	display: inline-block;
+	width: 100px;
+	text-align: right;
+}
+
+.myipt{
+	border: 1px #95B8E7 solid;
+	height: 24px;
+	width: 260px;
+}
+
+#goods_form .goods_content{
+	width: 100%;
+}
+</style>
+
+
+<script type = "text/javascript" src = "../js/ajaxfileupload.js"></script>
+<script type = "text/javascript" src = "../js/showpic.js"></script>
+<script type = "text/javascript" src = "../../ckeditor/ckeditor.js"></script>
+
+<script type = "text/javascript">
+	let vm=new Vue({
+		el:"#lll1",
+		data:{
+			tno:'',
+			gname:'',
+			price: '',
+			balance: '',
+			pics:'',
+			qperied:'',
+			intro:'',
+			descr:'',
+			message:[]
+
+		},
+		methods:{
+			showData:function () {
+				axios.post("../../goods.action?op=showGoodsInfo").then(result=>{
+					if (result.data.code==1){
+						this.message=result.data.data;
+						return;
+					}
+				})
+			},
+		},
+
+		created:function () {
+			this.showData();
+		}
+	});
+
+CKEDITOR.replace('goods_form_descr');
+
+
+var goods_obj = $('#goods_data').datagrid({
+	url:'../../goods',
+	fitColumns:true,
+	striped: true,
+	loadMsg: "数据加载中，请稍候...",
+	queryParams:{op:"findByPage"},
+	sortName:"gno",
+	remoteSort: false,
+	rownumbers: true,
+	pageSize: 5,
+	pageList: [5, 10, 15, 20, 30, 40, 50, 100],
+	pagination: true,
+	sortOrder: "desc",
+	columns:[[
+		{field:'gno', title:"商品编号", width:50, align:'center', sortable:true},
+		{field:'gname', title:"商品名称", width:100, align:'center'},
+		{field:'tname', title:"商品类型", width:80	, align:'center'},
+		{field:'price', title:"价格", width:80, align:'center'},
+		{field:'balance', title:"库存", width:80, align:'center'},
+		{field:'qperied', title:"发售日期", width:80, align:'center'},
+		{field:'status', title:"状态", width:50, align:'center', formatter:function(val, row, index){
+			//第一个参数当前这个单元格的值，第二个参数指向当前这一行，即你想取id, 可以通过row.tno,第三个参数行索引
+			if(val == 0){
+				return "<font color = 'red'>已下架</font>";
+			}else{
+				return "<font color = 'green'>正常</font>";
+			}
+		}},
+		{field:'_operator', title:"操作", width:80, align:'center', formatter: function(val, row, index){
+			return "<a href='javascript:showDetailDialog(" + row.gno +")' class = 'navy-icon-detail'>详细</a>";
+		}}
+	]],
+
+	toolbar:"#goods_search"
+});
+$(function(){
+	$.post("../../type", {op:"finds"}, result=>{
+		var str = "";
+		$.each(result, function(index, item){
+			str += "<option value = '" + item.tno + "'>" + item.tname + "</option>";
+		})
+		$("#goods_search_tno").append($(str));
+		$("#goods_form_tno").append($(str));
+	}, "json");
+
+})
+
+function searchGoodsInfo(){
+	var tno = $.trim($("#goods_search_tno").val());
+	var gname = $.trim($("#goods_search_gname").val());
+	var start = $.trim($("#goods_search_start").val());
+	var end = $.trim($("#goods_search_end").val());
+
+	goods_obj.datagrid({
+		url: "../../goods",
+		queryParams: {op:"findByPage", tno:tno, gname:gname, start:start, end:end}
+	})
+}
+
+//显示对话框
+function showAddGoodsInfoDiaLog(){
+	$("#goods_form")[0].reset();//重置表单
+	$("#goods_show_pics").html("");//清空图片预览区域的数据
+	CKEDITOR.instances.goods_form_descr.setData("");//清空富文本编辑器中的数据
+
+	$("#goods_dialog").dialog({
+		title: "添加商品信息",
+		iconCls: "icon-add",
+		//fit: true, //窗口覆盖
+		width: 600,
+		height: 400,
+		modal: true,//模式化窗口，即一次只能打开一个添加窗口
+		buttons:  [{
+			text: "添加",
+			iconCls: "icon-ok",
+			handler: function(){
+				goods_addgoods();
+			}
+		}, {
+			text: "取消",
+			iconCls: "icon-cancel",
+			handler: function(){
+				$("#goods_dialog").dialog("close");
+			}
+		}]
+	})
+	$("#goods_dialog").dialog("open");
+}
+
+function goods_addgoods(){
+	var tno = $.trim($("#goods_form_tno").val());
+	var gname = $.trim($("#goods_form_gname").val());
+	var price = $.trim($("#goods_form_price").val());
+	var balance = $.trim($("#goods_form_balance").val());
+	var unit = $.trim($("#goods_form_unit").val());
+	var weight = $.trim($("#goods_form_weight").val());
+	var qperied = $.trim($("#goods_form_qperied").val());
+	var intro = $.trim($("#goods_form_intro").val());
+	var descr = CKEDITOR.instances.goods_form_descr.getData();
+	console.info(intro);
+	if(tno == "" || gname == "" || price == "" || balance == "" || unit == "" || weight == "" || qperied == "" || intro == "" || descr == ""){
+		$.messager.show({title: '温馨提示', msg:'您输入的信息不完整，请完善后重新提交。。。', timeout:2000, showType:'slide'});
+		return;
+	}
+
+	$.ajaxFileUpload({
+		url: "../../goods?op=add",
+		secureuri: false,
+		fileElementId: "goods_form_pics",
+		dataType: "text",
+		data: {tno:tno, gname:gname, price:price, balance:balance, unit:unit, weight:weight, qperied:qperied, intro:intro, descr:descr, status:1},
+		success: function(data, status){
+			data = parseInt($.trim(data));
+			if(data > 0){
+				$('#goods_data').datagrid("reload"); //重新加载数据
+				$('#goods_dialog').dialog("close");	//隐藏弹出框
+				$.messager.show({title: '成功提示', msg:'商品信息添加成功。。。', timeout:2000, showType:'slide'});
+			} else{
+				$.messager.alert("失败提示", "商品信息添加失败。。。", "error");
+			}
+		},
+		error: function(data, status, e){
+			$.messager.alert("失败提示", "商品信息添加失败。。。\n" + e, "error");
+		}
+	})
+}
+
+
+
+
+</script>

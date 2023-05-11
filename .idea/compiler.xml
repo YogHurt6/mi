@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="mi-goods" />
+        <module name="mi-gateway" />
+        <module name="mi-personel" />
+        <module name="mi-security" />
+        <module name="mi-index" />
+        <module name="mi-order" />
+        <module name="mi-api" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="mi-back" target="1.8" />
+      <module name="mi-buy" target="1.8" />
+      <module name="mi-cart" target="1.8" />
+      <module name="mi-logistics" target="1.8" />
+      <module name="mi-summary" target="1.8" />
+      <module name="mi-user" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="mi-api" options="-parameters" />
+      <module name="mi-back" options="-parameters" />
+      <module name="mi-buy" options="-parameters" />
+      <module name="mi-cart" options="-parameters" />
+      <module name="mi-gateway" options="-parameters" />
+      <module name="mi-goods" options="-parameters" />
+      <module name="mi-index" options="-parameters" />
+      <module name="mi-logistics" options="-parameters" />
+      <module name="mi-order" options="-parameters" />
+      <module name="mi-personel" options="-parameters" />
+      <module name="mi-security" options="-parameters" />
+      <module name="mi-summary" options="-parameters" />
+      <module name="mi-user" options="-parameters" />
+    </option>
+  </component>
+</project>

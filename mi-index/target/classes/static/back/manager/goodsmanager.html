@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品信息管理</title>
+    <style type="text/css">
+        #goods_form li{
+            float: left;
+            width: 50%;
+            list-style: none;
+            margin-top:20px
+        }
+        tr td{
+            padding: 5px 20px;
+            align-items: center;
+        }
+
+        #goods_form li>label {
+            display: inline-block;
+            width: 100px;
+            text-align: right;
+        }
+
+        .myipt{
+            border: 1px #95B8E7 solid;
+            height: 24px;
+            width: 260px;
+        }
+
+        #goods_form .goods_content{
+            width: 100%;
+        }
+    </style>
+
+</head>
+<body>
+
+<div id="app2">
+<!-- 商品添加或更新 -->
+<div id="goods_dialog" class="easyui-dialog" v-if="turn">
+    <form id = "goods_form">
+        <ul>
+            <li>
+                <label>商品类型</label>
+                <input id ="goods_form_gno" class="myipt" type="text" placeholder="请输入商品类型编号" v-model="tno"/>
+            </li>
+            <li>
+                <label>商品名称</label>
+                <input id ="goods_form_gname" class="myipt" type="text" placeholder="请输入商品名称.." v-model="gname"/>
+            </li>
+            <li>
+                <label>商品价格</label>
+                <input id ="goods_form_price" class="myipt" type="text" min= "1" placeholder="请输入商品价格.." v-model="price"/>
+            </li>
+            <li>
+                <label>商品库存</label>
+                <input id ="goods_form_balance" class="myipt" type="number"  min = "1" placeholder="请输入商品库存.." v-model="balance"/>
+            </li>
+            <li>
+                <a href="addphoto.html">上传/修改图片</a>
+            </li>
+            <li id = "goods_show_pics" class = "goods_content">
+
+            </li>
+            <li class = "goods_content">
+                <label>商品简介</label>
+                <textarea rows="4" cols="120" id = goods_form_intro v-model="intro"></textarea>
+            </li>
+            <li class = "goods_content">
+                <label>商品详细</label>
+                <textarea name = "goods_form_descr" id = "goods_form_descr" rows="10" cols="80" v-model="descr"></textarea>
+            </li>
+            <li>
+                <label>商品状态</label>
+                <input  id ="goods_status"  v-model="status"/>
+            </li>
+        </ul>
+        <div><input type="button" value="添加" @click="insert()">
+            <input type="button" value="取消" @click="open()"></div>
+    </form>
+</div>
+<div v-else>
+<table>
+    <tr>
+        <input type="button" value="添加" @click="open()">
+        <input type="button" value="删除" @click="opendel()" v-if="!this.turndel">
+        <a href="addphoto.html">上传/修改图片</a>
+    </tr>
+    <tr>
+        <th>商品编号</th>
+        <th>商品名</th>
+        <th>商品类型</th>
+        <th>价格</th>
+        <th>库存</th>
+        <th>发售日期</th>
+        <th>状态</th>
+        <th>图片</th>
+    </tr>
+    <tr v-for="data in message">
+        <td>{{data.gno}}</td>
+        <td>{{data.gname}}</td>
+        <td>{{data.tno}}</td>
+        <td>{{data.price}}</td>
+        <td>{{data.balance}}</td>
+        <td>{{data.qperied}}</td>
+        <td>{{data.status}}</td>
+        <td>{{data.pics}}</td>
+        <td><input type="button" value="修改" @click="openup(data.gno,data.gname,data.tno,data.price,data.balance,data.status)" v-if="!turnup"></td>
+    </tr>
+</table>
+    <div v-if="turndel">
+        <span>请输入您要删除的商品编号:</span><input type="text" v-model="delno">
+        <input type="button" value="删除" @click.prevent="del()">
+        <input type="button" value="取消" @click.prevent="opendel()">
+    </div>
+    <div v-if="turnup">
+        <span>正在编辑商品号为:{{updata.ugno}}的信息:</span>
+        <input type="text" v-model="updata.ugname">
+        <input type="text" v-model="updata.utno">
+        <input type="text" v-model="updata.uprice">
+        <input type="text" v-model="updata.ubalance">
+        <input type="text" v-model="updata.ustatus">
+        <input type="button" value="修改" @click.prevent="update()">
+        <input type="button" value="取消" @click.prevent="openup()">
+    </div>
+<!--    <div v-if="turnup">-->
+<!--        <span>正在编辑商品类型号为:{{uptno}}的信息:</span>-->
+<!--        <input type="text" v-model="uptname">-->
+<!--        <input type="text" v-model="upstatus">-->
+<!--        <input type="button" value="修改" @click.prevent="update()">-->
+<!--        <input type="button" value="取消" @click.prevent="openup()">-->
+<!--    </div>-->
+    <div style="background-color: white;color: red">
+        <a @click.prevent="clickPage(1)">第一页</a>
+        <a @click.prevent="clickPage(pagebean.pre)" :page-data="pagebean.pre">上一页 </a>
+        <a @click.prevent="clickPage(pagebean.next)" :page-data="pagebean.next">下一页 </a>
+        <a @click.prevent="clickPage(pagebean.totalpages)" :page-data="pagebean.totalpages">最后一页 </a>
+        总共条{{pagebean.total}}记录/共分{{pagebean.totalpages}}页，
+        每页{{pagebean.pagesize}}条，当前第{{pagebean.pageno}}页
+        <br />
+        按<select id="sortby" v-model="pagebean.sortby">
+        <option value="gno" selected>商品编号</option>
+        <option value="qperied">发售日期</option>
+        <option value="tno">商品类型</option>
+        <option value="balance">库存</option>
+        <option value="price">成交价格</option>
+        <option value="status">状态</option>
+    </select>
+        <select id="sort" v-model="pagebean.sort">
+            <option value="asc" selected>升序</option>
+            <option value="desc">降序</option>
+        </select>
+        <input type="button" value="搜索" @click.prevent="clickPage(1)">
+    </div>
+
+</div>
+</div>
+<script>
+    let vm=new Vue({
+        el:"#app2",
+        data:{
+            turnup:false,
+            turn:false,
+            turndel:false,
+            gno:'',
+            gname:'',
+            tno:'',
+            price: '',
+            intro:'',
+            balance: '',
+            pics:'',
+            qperied:'',
+            descr:'',
+            status:'',
+            message:[],
+            picUrl:'',
+            delno:'',
+            pagebean:{
+                pageno:1,
+                //   pagesize:5,
+                sortby:'gno',
+                sort:'asc',
+                total:0,
+                totalpages:0,
+                //   pre:1,
+                next:1
+            },
+            updata:{//修改存放的信息
+                ugno:'',
+                ugname:'',
+                utno:'',
+                uprice:'',
+                ubalance:'',
+                ustatus:''
+            }
+        },
+        methods:{
+            openup:function(gno,gname,tno,price,balance,status){
+                this.updata.ugno=gno;
+                this.updata.ugname=gname;
+                this.updata.utno=tno;
+                this.updata.uprice=price;
+                this.updata.ubalance=balance;
+                this.updata.ustatus=status;
+                this.turnup=!this.turnup;
+            },
+            update:function(){
+                var params=new URLSearchParams();
+                params.append("ugno",this.updata.ugno)
+                params.append("ugname",this.updata.ugname)
+                params.append("utno",this.updata.utno)
+                params.append("uprice",this.updata.uprice)
+                params.append("ubalance",this.updata.ubalance)
+                params.append("ustatus",this.updata.ustatus)
+                axios.post("../../goods.action?op=updateGoods",params).then(result=>{
+                    if (result.data.code==1){
+                        alert("修改成功！！")
+                        this.turnup=!this.turnup;
+                        this.showData();
+                        return;
+                    }
+                    alert("修改失败！");
+                })
+
+            },
+            del:function(){
+                if (this.delno==null){
+                    alert("请填写您要删除的商品编号!!")
+                };
+                var params=new URLSearchParams();
+                params.append("gno",this.delno)
+                axios.post("../../goods.action?op=delGoods",params).then(result=>{
+                    if (result.data.code==1){
+                        alert("删除成功！！")
+                        this.turndel=!this.turndel;
+                        this.showData();
+                        return;
+                    }
+                    alert("删除失败！此商品类型号不存在");
+                })
+            },
+            opendel:function(){
+                this.turndel=!this.turndel;
+            },
+            open:function(){
+              this.turn=!this.turn;
+            },
+            insert:function(){
+                //const _this=this;
+                // let file=document.getElementById('imgFile1').files[0];
+                // console.info(file);
+                // let formData=new FormData();
+                // formData.append("uploadFile",file,file.name);
+                // const config={headers:{"Content-Type":"multipart/form-data;boundary="+new Date().getTime()}};
+                //
+                // axios.post("../../goods.action?op=uploadFile",formData,config).then(result=>{
+                //     if (result.data.code==1){
+                //         this.picUrl=result.data.data;
+
+                        let params=new URLSearchParams();
+                        params.append("gname",this.gname);
+                        params.append("tno",this.tno);
+                        params.append("price",this.price);
+                        params.append("intro",this.intro);
+                        params.append("balance",this.balance);
+                        params.append("pics",this.picUrl);
+                        params.append("descr",this.descr);
+                        params.append("status",this.status);
+                        axios.post("../../goods.action?op=newGoods",params).then(result=>{
+                            if(result.data.code==1){
+                                alert("添加商品成功！！")
+                                this.turn=!this.turn;
+                                return;
+                            }
+                            alert("添加失败，请填写完整的信息")
+                        })
+                        //this.showData();
+                        //this.turn=!this.turn;
+                        return;
+                   // }
+                    alert("添加失败！！")
+                //})
+            },
+            showData:function () {
+                axios.post("../../goods.action?op=showGoodsInfo").then(result=>{
+                    if (result.data.code==1){
+                        this.message=result.data.data;
+                        return;
+                    }
+                })
+            },
+            clickPage:function(pageno){
+                var promise=this.showPage(pageno);
+                promise.then(result=>{
+                    this.displayPage(result.data);
+                })
+            },
+            showPage:function(pageno){
+                var params=new URLSearchParams();
+                params.append("pageno",pageno);
+                params.append("sortby",this.pagebean.sortby);
+                params.append("sort",this.pagebean.sort);
+                //返回一个promise
+                return axios.post("../../goods.action?op=findFoodsByPage",params);
+            },
+            displayPage:function (result) {
+                let jsonModel2=result;
+                if(jsonModel2.code==1){
+                    //显示数据到界面
+                    //绑定到model中
+                    vm.$data.message=jsonModel2.data.dataset;
+                    vm.$data.pagebean=jsonModel2.data;
+                }
+            },
+        },
+
+        created:function () {
+            //this.showData();
+            this.clickPage(1);
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<title></title>
+<head>
+    <style type="text/css">
+        table.hovertable {
+            font-family: verdana,arial,sans-serif;
+            font-size:11px;
+            color:#333333;
+            border-width: 10px;
+            border-color: #999999;
+            border-collapse: collapse;
+        }
+        table.hovertable th {
+            background-color:#c3dde0;
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #a9c6c9;
+        }
+        table.hovertable tr {
+            background-color:#d4e3e5;
+        }
+        table.hovertable td {
+            border-width: 10px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #a9c6c9;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <!-- Table goes in the document BODY -->
+    <table >
+        <tr>
+            <th>会员id</th><th style="text-align: center">姓名</th><th>电话</th><th>邮箱</th><th>注册时间</th>
+        </tr>
+        <tr v-for="value in users" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+            <td>{{value.mno}}</td><td>{{value.nickName}}</td><td>{{value.tel}}</td><td>{{value.email}}</td><td>{{value.regDate}}</td>
+            <td @click="modify(value.nickName,value.tel,value.email,value.mno)" v-if="show">编辑</td>
+            <td @click="del(value.mno)" v-if="show">删除</td>
+        </tr>
+    </table>
+    <FORM name="issue" method="post" action="" width="100%" v-if="!show" >
+
+        <br/>
+        <TH  style="WIDTH: 100%" >name：<input cols="20" rows="5"  name="nickName" v-model="nickName" ></TH>
+        <br/>
+        <br/>
+        <TH  style="WIDTH: 100%" >tel：<input cols="20" rows="5" name="tel" v-model="tel"></input></TH>
+        <br/>
+        <br/>
+        <TH  style="WIDTH: 100%" >email：<input cols="20" rows="5" name="emails" v-model="emails"></input></TH>
+        <br/>
+        <br>
+        <INPUT  type="button" value="修改" @click="modifys()"> &nbsp;&nbsp;<INPUT  type="button" value="取消" @click="show=!show">
+        <br/>
+        <br>
+    </FORM>
+</div>
+
+<script src="../../js/vue.js"></script>
+<script src="../../js/axios.js"></script>
+
+<script type="text/javascript">
+    let vm=new Vue({
+        el:"#app",
+        data:{
+            users:{},
+            show:true,
+            nickName:'',
+            tel:'',
+            emails:'',
+            mno:''
+
+        },
+
+        methods:{
+            showUser:function () {
+                var params =new URLSearchParams();
+                params.append("op","showUser");
+                axios.post("../../memberinfo.action",params).then(data=>{
+                    let jsonModel=data.data;
+                    if(jsonModel.code==1){
+                        this.users=jsonModel.data;
+                    }else{
+                        alert("无管理者用户");
+                    }
+                });
+            },
+            modify:function (nickName,tel,email,mno) {
+                this.nickName= nickName;
+                this.tel= tel;
+                this.emails= email;
+                this.mno= mno;
+                  this.show=false;
+            },
+            modifys:function () {
+                if( confirm("确认修改?")==false){
+                    return;
+                }
+                var params=new URLSearchParams();
+                params.append("op","modifys");
+                params.append("nickName",this.nickName)
+                params.append("tel",this.tel);
+                params.append("emails",this.emails);
+                params.append("mno",this.mno);
+                axios.post("../../memberinfo.action",params).then(result=>{
+                    var jsonModel=result.data;
+                    if(jsonModel.code==1){
+                        alert("修改成功!");
+                        this.showUser();
+                      this.show=true;
+                      // this.modify(jsonModel.data.nickName,jsonModel.data.tel,jsonModel.data.emails, jsonModel.data.mno);
+                    }
+
+                });
+            },
+            del:function (mno) {
+                if( confirm("确认删除?")==false){
+                    return;
+                }
+                var params=new URLSearchParams();
+                params.append("op","del");
+                params.append("mno",mno )
+                axios.post("../../memberinfo.action",params).then(result=>{
+                    let jsonModel=result.data;
+                    if(jsonModel.code==1){
+                        alert("删除成功!");
+                        this.show=true;
+                    }
+                })
+            }
+        },
+
+        mounted:function () {
+            axios.all([this.showUser()]);
+        }
+    })
+
+</script>
+</body>
+</html>

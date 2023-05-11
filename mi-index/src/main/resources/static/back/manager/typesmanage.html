@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+        span{color: red}
+    </style>
+</head>
+<body>
+<div id="app3">
+    <div id="goods_dialog" class="easyui-dialog" v-if="turn">
+        <form id = "goods_form">
+            <ul>
+                <li>
+                    <label>商品类型号</label>
+                    <input id ="goods_form_gtype" class="myipt" type="text" placeholder="请输入商品名称.." v-model="tno"/>
+                </li>
+                <li>
+                    <label>类型名</label>
+                    <input id ="goods_form_gname" class="myipt" type="text" placeholder="请输入商品名称.." v-model="tname"/>
+                </li>
+                <li class = "goods_content">
+                    <label>状态</label>
+                    <input  type="text" placeholder="请输入商品名称.." v-model="status"/>
+                </li>
+            </ul>
+            <div><input type="button" value="添加" @click="insert()">
+                <input type="button" value="取消" @click="open()"></div>
+        </form>
+    </div>
+    <div v-else>
+<table>
+    <tr>
+        <input type="button" value="添加" @click="open()">
+        <input type="button" value="删除" @click="opendel()" v-if="!this.turndel">
+    </tr>
+    <tr>
+        <th>商品类型号</th>
+        <th>类型名</th>
+        <th>状态</th>
+    </tr>
+    <tr v-for="data in message">
+        <td>{{data.tno}}</td>
+        <td>{{data.tname}}</td>
+        <td>{{data.status}}</td>
+        <td><input type="button" value="修改" @click="openup(data.tno,data.tname,data.status)" v-if="!turnup"></td>
+    </tr>
+</table>
+    </div>
+    <div v-if="turndel">
+        <span>请输入您要删除的商品类型号:</span><input type="text" v-model="delno">
+        <input type="button" value="删除" @click.prevent="del()">
+        <input type="button" value="取消" @click.prevent="opendel()">
+    </div>
+    <div v-if="turnup">
+        <span>正在编辑商品类型号为:{{uptno}}的信息:</span>
+        <input type="text" v-model="uptname">
+        <input type="text" v-model="upstatus">
+        <input type="button" value="修改" @click.prevent="update()">
+        <input type="button" value="取消" @click.prevent="openup()">
+    </div>
+</div>
+
+<script>
+    let vm=new Vue({
+        el:"#app3",
+        data:{
+            turndel:false,
+            turnup:false,
+            turn:false,
+            tno:'',
+            tname:'',
+            status:'',
+            uptno:'',
+            uptname:'',
+            upstatus:'',
+            delno:'',
+            message:[]
+        },
+        methods:{
+
+            update:function(){
+                var params=new URLSearchParams();
+                params.append("tno",this.uptno)
+                params.append("tname",this.uptname)
+                params.append("status",this.upstatus)
+                axios.post("../../goods.action?op=updateType",params).then(result=>{
+                    if (result.data.code==1){
+                        alert("修改成功！！")
+                        this.turnup=!this.turnup;
+                        this.showData();
+                        return;
+                    }
+                    alert("修改失败！");
+                })
+
+            },
+            del:function(){
+                if (this.delno==null){
+                  alert("请填写您要删除的商品类型号!!")
+                };
+                var params=new URLSearchParams();
+                params.append("delno",this.delno)
+                axios.post("../../goods.action?op=delType",params).then(result=>{
+                if (result.data.code==1){
+                    alert("删除成功！！")
+                    this.turndel=!this.turndel;
+                    this.showData();
+                    return;
+                }
+                alert("删除失败！此商品类型号不存在");
+            })
+            },
+            opendel:function(){
+                this.turndel=!this.turndel;
+            },
+            open:function(){
+                this.turn=!this.turn;
+            },
+            openup:function(tno,tname,status){
+                this.uptno=tno;
+                this.uptname=tname;
+                this.upstatus=status;
+                this.turnup=!this.turnup;
+            },
+            insert:function(){
+                if (this.tno==null||this.tname==null||this.status==null){
+                    alert("填写值不得为空！！")
+                }
+                var params=new URLSearchParams();
+                params.append("tno",this.tno);
+                params.append("tname",this.tname);
+                params.append("status",this.status);
+                axios.post("../../goods.action?op=newType",params).then(result=>{
+                    if (result.data.code==1){
+                        alert("添加商品类型成功!!");
+                        this.turn=!this.turn;
+                        this.showData();
+                        return;
+                    }
+                    alert("添加商品类型失败,请检查您的商品信息是否正确!!");
+                })
+            },
+            showData:function () {
+                axios.post("../../goods.action?op=showGoodsType").then(result=>{
+                    if (result.data.code==1){
+                        this.message=result.data.data;
+                        return;
+                    }
+                })
+            },
+        },
+        created:function () {
+            this.showData();
+        },
+    });
+</script>
+</body>
+</html>
