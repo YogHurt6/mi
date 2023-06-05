@@ -1,11 +1,15 @@
 package com.mis.miSecurity.controller;
 
+import com.mis.miSecurity.util.QQUtil;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.ImageIO;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -13,10 +17,40 @@ import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 @RestController
 public class VerifyCodeController {
+
+    //op=getYzm
+    @RequestMapping("/getYzm")
+    public Map getYzm(@RequestParam String email) throws ServletException, IOException {
+        Map response=new HashMap();
+        //String email = request.getParameter("email");
+        if (email == null || email == "") {
+            response.put("code",0);
+            response.put("msg","请输入正确的邮箱地址");
+            return response;
+        }
+        try {
+            //QQUtil.sendCode("3396076052@qq.com");
+            QQUtil.sendCode(email);
+            String aString = QQUtil.QQmail;
+            //jm.setData(aString);
+            response.put("data",aString);
+            //session.setAttribute("codeq",  aString);
+            System.out.println(aString);
+        } catch (Exception e1) {
+            response.put("code",0);
+            response.put("msg","请输入正确的邮箱地址");
+        }
+
+        response.put("code",1);
+        response.put("msg","发送成功");
+        return response;
+    }
 
     @GetMapping("/code.action")
     public HttpEntity image(HttpSession session)throws IOException{

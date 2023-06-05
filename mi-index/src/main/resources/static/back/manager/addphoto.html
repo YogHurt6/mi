@@ -32,10 +32,10 @@
 <div id="app9">
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="商品编号">
-            <el-input v-model="formInline.gno" placeholder="请输入商品编号"></el-input>
+            <el-input v-model="gno" placeholder="请输入商品编号"></el-input>
         </el-form-item>
         <el-form-item label="图片">
-            <input type="file" id="imgFile" style="margin-bottom: 10px;" />
+            <input type="file" id="imgFile" @change="updateHead" style="margin-bottom: 10px;" />
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="onSubmit">增加</el-button>
@@ -51,48 +51,81 @@
         el:"#app9",
         data:{
             picUrl:'',
-            formInline: {
-                gno: '',
-            }
+            gno: ''
+
         },
         methods:{
             turnback(){
                 window.history.back(-1);
             },
+            updateHead:function (e) {
+                var self=this;  //保证再局部作用域中 ，避免污染  this
+                for (var i = 0; i < e.target.files.length; i++) {
+                    self.head=e.target.files[0];
+                }
+            },
             onSubmit() {
-                let file = document.getElementById('imgFile').files[0];
-                let formData = new FormData();
-                formData.append("uploadFile",file,file.name);
-                const config = {headers: { "Content-Type": "multipart/form-data;boundary="+new Date().getTime() }};
-                axios.post('../../fileX.action?op=uploadFile',formData,config).then(data => {
-                    if (data.data.code == 1) {
-                        this.$message({type: 'success', message:'图片上传成功!'})
-                        this.picUrl = data.data.data;
-                        //this.pic=data.data.msg;
-                        let params=new URLSearchParams();
-                        params.append("gno",this.formInline.gno);
-                        params.append("pic",this.picUrl);
-                        // params.append("gname",this.gname);
-                        // params.append("tno",this.tno);
-                        // params.append("price",this.price);
-                        // params.append("intro",this.intro);
-                        // params.append("balance",this.balance);
-                        // params.append("pics",this.picUrl);
-                        // params.append("descr",this.descr);
-                        // params.append("status",this.status);
-                        axios.post("../../goods.action?op=newPhoto",params).then(data => {
-                            if(data.data.code == 1){
-                                this.$message({type: 'success', message:'图片更改/增加成功!'})
+                // let file = document.getElementById('imgFile').files[0];
+                // let formData = new FormData();
+                // formData.append("uploadFile",file,file.name);
+                // const config = {headers: { "Content-Type": "multipart/form-data;boundary="+new Date().getTime() }};
+                // axios.post('http://localhost:2357/migoods/addgoods/uploadPic',formData,config).then(data => {
+                //     if (data.data.code == 1) {
+                //         this.$message({type: 'success', message:'图片上传成功!'})
+                //         this.picUrl = data.data.data;
+                //         //this.pic=data.data.msg;
+                //         let params=new URLSearchParams();
+                //         params.append("gno",this.formInline.gno);
+                //         params.append("pic",this.picUrl);
+                //         // params.append("gname",this.gname);
+                //         // params.append("tno",this.tno);
+                //         // params.append("price",this.price);
+                //         // params.append("intro",this.intro);
+                //         // params.append("balance",this.balance);
+                //         // params.append("pics",this.picUrl);
+                //         // params.append("descr",this.descr);
+                //         // params.append("status",this.status);
+                //         axios.post("http://localhost:2357/migoods/addgoods/uploadPic",params).then(data => {
+                //             if(data.data.code == 1){
+                //                 this.$message({type: 'success', message:'图片更改/增加成功!'})
+                //
+                //             }else {
+                //                 this.$message.error(data.data.msg);
+                //             }
+                //         })
+                //         axios.post()
+                //     } else {
+                //         this.$message.error(data.data.msg);
+                //     }
+                // });
+                //文件上传，需要自己构建  基于编码格式 multipart/form-data 的formdata对象
+                let param = new FormData();//创建formdata对象
+                // param.append('uname',this.uname);  //添加form表单的其他数据
+                param.append('gno',this.gno);
 
-                            }else {
-                                this.$message.error(data.data.msg);
-                            }
-                        })
-                        axios.post()
-                    } else {
-                        this.$message.error(data.data.msg);
+                param.append("head",this.head); //通过append向form对象添加数据
+                // for(var i=0;i<this.lifes.length;i++){
+                //     param.append("lifes",this.lifes[i]);
+                // }
+
+                let config={
+                    headers: {'Content-Type':'multipart/form-data'}
+                }
+                //添加请求头
+                // 参数'/reg' /代表项目服务器的根路径： http://localhost:8080/
+                //  不加 /  则表明从test3.html所在的父路径访问 : http://localhost:8080/res/test3.html
+                //               http://localhost:8080/res/reg
+                //为了后面做针对Controller过滤器
+                axios.post('http://localhost:2357/migoods/addgoods/uploadPic',param,config).then(response=>{
+                    if(response.data.code==1){
+                        this.msg="添加用户成功";
+						this.$message({type: 'success', message:'图片更改/增加成功!'})
                     }
                 });
+                // var self=this;  //保证再局部作用域中 ，避免污染  this
+                // for (var i = 0; i < e.target.files.length; i++) {
+                //     self.head=e.target.files[0];
+                // }
             }
         },
         created(){

@@ -13,6 +13,7 @@
         <module name="mi-security" />
         <module name="mi-index" />
         <module name="mi-order" />
+        <module name="mi-entity" />
         <module name="mi-api" />
       </profile>
     </annotationProcessing>
@@ -31,6 +32,7 @@
       <module name="mi-back" options="-parameters" />
       <module name="mi-buy" options="-parameters" />
       <module name="mi-cart" options="-parameters" />
+      <module name="mi-entity" options="-parameters" />
       <module name="mi-gateway" options="-parameters" />
       <module name="mi-goods" options="-parameters" />
       <module name="mi-index" options="-parameters" />

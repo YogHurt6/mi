@@ -42,7 +42,7 @@
             <label for="code" class="login_label pwd_label"></label>
             <input type="text" maxlength="4" class="ipt1" name="code" v-model="valcode" @blur="checkInfo(2)" id="code"
                    @focus="clearmsg" placeholder="验证码"/>
-            <img class="code" src="code.action" onclick="this.src='code.action?d=' + new Date()">
+            <img class="code" src="http://localhost:2357/misecurity/code.action" onclick="this.src='http://localhost:2357/misecurity/code.action?d=' + new Date()">
         </div>
 
         <div class="item item2">
@@ -149,11 +149,9 @@
                     console.info(this.status);
                     return;
                 }
-                axios.post("login.action", qs.stringify({
-                    op: "login",
-                    nickName: this.account,
+                axios.post("http://localhost:2357/misecurity/login.action", qs.stringify({
+                    nickname: this.account,
                     pwd: this.pwd,
-                    realName: this.code,
                     valcode: this.valcode
                 })).then(result => {	//vue的axios里面默认发送请求时的参数格式为json格式，这样的后台没法识别，需要通过qs.stringify()方法
                     // if (result.status == 200) {
@@ -175,8 +173,7 @@
                     // } else {
                     //     this.info = "请求失败， 请检查你的网络";
                     // }
-                    if
-                    (result.data.code == 3) {
+                    if(result.data.code == 3) {
                         // alert("验证码为空");
                         // return;
                     } else if (result.data.code == 2) {

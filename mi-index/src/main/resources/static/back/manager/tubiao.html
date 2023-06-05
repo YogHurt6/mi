@@ -33,7 +33,7 @@
                 }
             },
             select:function(){
-                axios.get("../../statement.action?op=select").then(result=> {
+                axios.get("http://localhost:2357/mipersonel/chart/showTypes").then(result=> {
                     if (result.data.code == 1) {
                         var dom = document.getElementById('container1');
                         var myChart = echarts.init(dom,null,{
@@ -76,7 +76,7 @@
                 });
             },
             querySaleData:function () {
-                axios.get("../../statement.action?op=querySaleData").then(result=>{
+                axios.get("http://localhost:2357/mipersonel/chart/showPrice").then(result=>{
                     if(result.data.code==1) {
                         var dom = document.getElementById("container");
                         var myChart = echarts.init(dom, null, {
@@ -137,7 +137,7 @@
                 });
             },
             lines:function () {
-                axios.get("../../statement.action?op=querySaleData").then(result=>{
+                axios.get("http://localhost:2357/mipersonel/chart/showPrice").then(result=>{
                     if(result.data.code==1) {
                         var dom = document.getElementById("container");
                         var myChart = echarts.init(dom, null, {
@@ -213,7 +213,7 @@
                 });
             },
             huan:function () {
-                axios.get("../../statement.action?op=querySaleData").then(result=> {
+                axios.get("http://localhost:2357/mipersonel/chart/showPrice").then(result=> {
                     if (result.data.code == 1) {
                         var dom = document.getElementById('container');
                         var myChart = echarts.init(dom,null,{

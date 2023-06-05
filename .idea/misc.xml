@@ -6,13 +6,14 @@
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/mi-api/pom.xml" />
+        <option value="$PROJECT_DIR$/mi-entity/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
-        <option value="$PROJECT_DIR$/mi-cart/pom.xml" />
         <option value="$PROJECT_DIR$/mi-back/pom.xml" />
         <option value="$PROJECT_DIR$/mi-buy/pom.xml" />
+        <option value="$PROJECT_DIR$/mi-cart/pom.xml" />
         <option value="$PROJECT_DIR$/mi-logistics/pom.xml" />
         <option value="$PROJECT_DIR$/mi-summary/pom.xml" />
         <option value="$PROJECT_DIR$/mi-user/pom.xml" />

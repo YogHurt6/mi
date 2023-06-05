@@ -14,7 +14,7 @@
             <ul>
                 <li>
                     <label>商品类型号</label>
-                    <input id ="goods_form_gtype" class="myipt" type="text" placeholder="请输入商品名称.." v-model="tno"/>
+                    <input id ="goods_form_gtype" class="myipt" type="text" placeholder="请输入商品名称.." disabled="disabled" v-model="tno"/>
                 </li>
                 <li>
                     <label>类型名</label>
@@ -85,7 +85,7 @@
                 params.append("tno",this.uptno)
                 params.append("tname",this.uptname)
                 params.append("status",this.upstatus)
-                axios.post("../../goods.action?op=updateType",params).then(result=>{
+                axios.post("http://localhost:2357/migoods/types/modifys",params).then(result=>{
                     if (result.data.code==1){
                         alert("修改成功！！")
                         this.turnup=!this.turnup;
@@ -101,8 +101,8 @@
                   alert("请填写您要删除的商品类型号!!")
                 };
                 var params=new URLSearchParams();
-                params.append("delno",this.delno)
-                axios.post("../../goods.action?op=delType",params).then(result=>{
+                params.append("tno",this.delno)
+                axios.post("http://localhost:2357/migoods/types/del",params).then(result=>{
                 if (result.data.code==1){
                     alert("删除成功！！")
                     this.turndel=!this.turndel;
@@ -129,10 +129,10 @@
                     alert("填写值不得为空！！")
                 }
                 var params=new URLSearchParams();
-                params.append("tno",this.tno);
+                //params.append("tno",this.tno);
                 params.append("tname",this.tname);
                 params.append("status",this.status);
-                axios.post("../../goods.action?op=newType",params).then(result=>{
+                axios.post("http://localhost:2357/migoods/types/add",params).then(result=>{
                     if (result.data.code==1){
                         alert("添加商品类型成功!!");
                         this.turn=!this.turn;
@@ -143,7 +143,7 @@
                 })
             },
             showData:function () {
-                axios.post("../../goods.action?op=showGoodsType").then(result=>{
+                axios.post("http://localhost:2357/migoods/types/showType").then(result=>{
                     if (result.data.code==1){
                         this.message=result.data.data;
                         return;

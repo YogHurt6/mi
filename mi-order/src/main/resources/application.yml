@@ -5,11 +5,13 @@ spring:
 #        port: 8719
 #        dashboard: localhost:8888
 #      eager: true
+
     nacos:
       discovery:
         server-addr: localhost:8848
         username: nacos
         password: nacos
+
 #  sleuth:
 #    web:
 #      client:

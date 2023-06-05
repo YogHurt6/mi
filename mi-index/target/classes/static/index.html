@@ -176,6 +176,7 @@
     var page = 1;
     var rows = 10;
 
+    var addrgoods="http://localhost:2357/migoods/"
     let types = new Vue({
         el: "#search_item",
         data: {
@@ -187,10 +188,12 @@
             goods: []
         },
         mounted: function(){ //页面渲染完成后要执行的方法
-
-            axios.post("goods.action", qs.stringify({op: "showGoodsType"})).then(result => {	//vue的axios里面默认发送请求时的参数格式为json格式，这样的后台没法识别，需要通过qs.stringify()方法
-                if(result.status == 200){	//说明请求成功
+            //http://localhost:8802/types/showType
+            axios.post(addrgoods+"types/showType").then(result => {	//vue的axios里面默认发送请求时的参数格式为json格式，这样的后台没法识别，需要通过qs.stringify()方法
+                if(result.data.code == 1){	//说明请求成功
                     this.types = result.data.data;
+                }else {
+                    alert("没有类型")
                 }
             })
             // axios.post("cart", qs.stringify({op:"info"})).then(result => {
@@ -208,8 +211,8 @@
                 $("#search_item>a").removeClass("selected");
                 $("#search_item>a").eq(index).addClass("selected");
                 page = 1;
-                axios.post("goods.action", qs.stringify({op: "findByFirst", page:page, rows:rows,gname:"1", tno:tno,sortby:this.sortby, sort:this.sort})).then(result => {	//vue的axios里面默认发送请求时的参数格式为json格式，这样的后台没法识别，需要通过qs.stringify()方法
-                    if(result.status == 200){	//说明请求成功
+                axios.post(addrgoods+"miGoods/findByTno", qs.stringify({ page:page, rows:rows,gname:"1", tno:tno,sortby:this.sortby, sort:this.sort})).then(result => {	//vue的axios里面默认发送请求时的参数格式为json格式，这样的后台没法识别，需要通过qs.stringify()方法
+                    if(result.code == 1){	//说明请求成功
                         vm.$data.goods = result.data.data.dataset;
                         $("#pagination").showPage(Math.ceil(result.data.data.total/ rows));
                     }

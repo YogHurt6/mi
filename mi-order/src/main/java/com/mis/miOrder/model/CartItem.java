@@ -1,7 +1,7 @@
 package com.mis.miOrder.model;
 
 
-import com.mis.miGoods.bean.Goodsinfo;
+import com.mis.bean.Goodsinfo;
 
 import java.io.Serializable;
 

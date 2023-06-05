@@ -1,7 +1,7 @@
 package com.mis.miGoods.controllers;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.mis.miGoods.bean.Goodsinfo;
+import com.mis.bean.Goodsinfo;
 import com.mis.miGoods.biz.MiGoodsBiz;
 import com.mis.miGoods.web.model.PageBean;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +33,23 @@ public class MiGoodsController {
             return map;
         }
         map.put("code", 1);
-        map.put("msg", m);
+        map.put("data", m);
+        return map;
+    }
+
+    @RequestMapping("findByTno")
+    public Map<String, Object> findByTno(@RequestParam String tno) {
+        Map<String, Object> map = new HashMap<>();
+        Goodsinfo m = null;
+        try {
+            m = this.miGoodsBiz.findByTno(tno);
+        } catch (Exception e) {
+            map.put("code", 0);
+            map.put("msg", "出错了");
+            return map;
+        }
+        map.put("code", 1);
+        map.put("data", m);
         return map;
     }
 

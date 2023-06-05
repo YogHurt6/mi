@@ -1,227 +1,271 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
+<head lang="en">
+    <meta charset="utf-8"/>
     <title>个人信息</title>
-    <base href="../">
-    <meta name="keywords" content="小吃,美食,零食,源辰"/>
-    <meta name="description" content="各种小吃美食，应有尽有"/>
-    <link href="images/xiaomi-logo.png" rel="shortcut icon" type="image/x-icon"/>
-    <link href="css/header.css" rel="stylesheet" type="text/css"/>
-    <link href="css/footer.css" rel="stylesheet" type="text/css"/>
-    <style>
-        **#nav  {
-            width: 500px;
-            background:yellow ;
-        }**
-         .title{
-             font-size: 18px;
-             font-weight: bolder;
-             text-indent: 1em;
-             line-height: 35px;
-             background: greenyellow;
-         }
-
-        /*ul{*/
-        /*    color: red;*/
-        /*}*/
-
-        /*ul li*/
-        ul li {
-            height: 30px;
-            /*    行高*/
-            /*    list-style: none;*/
-            /*    去掉网页当中的点*/
-            list-style: circle;
-            text-indent: 1em;
-            background: yellow;
+    <link rel="stylesheet" type="text/css" href="../css/public.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/mygrxx.css"/>
+    <link href="../css/header.css" rel="stylesheet" type="text/css"/>
+    <link href="../css/footer.css" rel="stylesheet" type="text/css"/>
+    <style type="text/css">
+        /*修改信息框的样式*/
+        #modify {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
-        /*    字体间距 */
-        /*  把它变成空心点  */
-        /*none 去掉圆点*/
-        /*circle   空心圆*/
-        /*decimal   数字*/
-        /*square    正方形*/
-        /**!*/
-        tr td{
-            padding: 5px 20px;
+
+        #modify h3 {
+            margin-top: 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        #modify form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #modify label {
+            display: inline-block;
+            width: 80px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        #modify input[type="text"],
+        #modify input[type="password"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-bottom: 10px;
+        }
+
+        #modify input[type="text"]::placeholder,
+        #modify input[type="password"]::placeholder {
+            color: #ccc;
+        }
+
+        .bc1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .bc1 input[type="button"] {
+            padding: 5px 10px;
+            background-color: #337ab7;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .bc1 input[type="button"]:hover {
+            background-color: #286090;
+        }
+
+        .bc1 input[type="button"]:last-child {
+            background-color: #ccc;
+            color: #333;
+        }
+
+        .bc1 input[type="button"]:last-child:hover {
+            background-color: #b3b3b3;
+        }
+
+        /*修改头像框的样式*/
+        #photo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
             align-items: center;
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            opacity: 0;
+            animation: fadeIn 0.3s ease forwards;
         }
 
-        a{
-            text-decoration: none;
-            font-size: 14px;
-            color: black;
-
+        #photo h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
         }
-        a:hover {
-            color: blueviolet;
-            /*  鼠标点上去的颜色  */
-            text-decoration: underline;
-            /*    加上下划线*/
+
+        #photo form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        #photo h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        #photo input[type="button"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        #photo input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #photo #unshow {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -55%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
         }
     </style>
 </head>
 <body>
 <div id="app">
-    <!-- 顶部区域 -->
+
     <header id="header">
         <!-- 顶部标题区域 -->
-        <div class="htitle">
-            <a href="#" target="_blank" class="location">衡阳</a>
+        <div id="t">
+            <div class="htitle">
+                <a href="#" target="_blank" class="location">衡阳</a>
 
-            <div class="header-info" id="login_info">
-                <div class="login-info" v-if="isLogin">
-                    <a href=" " title="点击登录" target="_blank">欢迎您:{{uname}}</a>
-                    <a href="../register.html" title="点击注册"> 免费注册 </a>
-                </div>
-                <div class="login-info" v-else>
-                    <a href="../login.html" title="点击登录">您好，请登录</a>
-                    <a href="../register.html" title="点击注册"> 免费注册 </a>
-                </div>
+                <div class="header-info" id="login_info">
+                    <div class="login-info" v-if="isLogin">
+                        <a href="login.html" title="点击登录" target="_blank">欢迎您:{{uname}} <a href=""
+                                                                                 @click.prevent="logout()">退出</a></a>
+                        <a href="register.html" title="点击注册"> 免费注册 </a>
+                    </div>
+                    <div class="login-info" v-else>
+                        <a href="login.html" title="点击登录">您好，请登录</a>
+                        <a href="register.html" title="点击注册"> 免费注册 </a>
+                    </div>
 
-                <div class="person-info">
-                    <span>|</span>
-                    <a href="front/order.html" target="_blank">我的订单</a>
-                    <span>|</span>
-                    <a href="back/manager/index.html" target="_blank">后台管理</a>
-                    <span>|</span>
-                    <a href="front/service.html" >客户服务</a>
-                    <span>|</span>
-                    <a href="front/Information.html">个人信息</a>
+                    <div class="person-info">
+                        <span>|</span>
+                        <a href="front/order.html" target="_blank">我的订单</a>
+                        <span>|</span>
+                        <a href="back/index.html" target="_blank">后台管理</a>
+                        <span>|</span>
+                        <a href="front/service.html" >客户服务</a>
+                        <span>|</span>
+                        <a href="front/Information.html">个人信息</a>
+                    </div>
                 </div>
-
             </div>
+            <a href="../index.html" title="首页">
+                <img src="../images/logo.png" width="260px" height="120px"/>
+            </a>
         </div>
-        <a href="index.html">
-            <img src="images/logo.png" width="260px" height="120px"/>
-        </a>
-
     </header>
 
-    <div class="content" v-if="!loginflag">
-        <b class="title">用户信息</b>
-        <ul type="">
-            <li>
-                <h3>用户名:&nbsp;&nbsp;{{nickName}}</h3>
-
-            </li>
-            <li>
-                <h3>电话:&nbsp;&nbsp;{{Tel}}</h3>
-
-            </li>
-            <li>
-                <h3>邮箱:&nbsp;&nbsp;{{email}}</h3>
-
-            </li>
-
-        </ul>
-        <input type="button" value="修改信息" @click="loginflag=!loginflag">
-    </div>
-    <!--修改信息-->
-    <div class="content" id="login" v-if="loginflag">
-        <span id="unshow" @click="loginflag=false">X</span>
-        <form name="myform">
-            <table>
-                <tr>
-                    <td class="labname"><label for="nickName">用户名：</label></td>
-                    <td><input type="text" name="nickName" placeholder="请输入新用户名"
-                               id="nickName" v-model="nickName"/></td>
-                </tr>
-                <tr>
-                    <td class="labname"><label for="pwd">密码：</label></td>
-                    <td><input type="password" name="pwd" placeholder="请输入密码"
-                               id="pwd" v-model="pwd"/></td>
-                </tr>
-                <tr>
-                    <td class="labname"><label for="pwd2">确认密码：</label></td>
-                    <td><input type="password" name="pwd2" placeholder="请确认密码"
-                               id="pwd2" v-model="pwd2"/></td>
-                </tr>
-                <tr>
-                    <td class="labname"><label for="Tel">电话：</label></td>
-                    <td><input type="text" name="Tel" placeholder="请输入电话号码"
-                               id="Tel" v-model="Tel"/></td>
-                </tr>
-                <tr>
-                    <td class="labname"><label for="email">邮箱：</label></td>
-                    <td><input type="text" name="email" placeholder="请输入邮箱"
-                               id="email" v-model="email"/></td>
-                </tr>
-                <tr>
-                    <td class="labname"><label for="yzm">验证码：</label></td>
-                    <td><input type="text" name="yzm" placeholder="请输入验证码"
-                               id="yzm" v-model="yzm"/></td>
-                    <td><img src="code.action" onclick="this.src='code.action?d=' + new Date()" id="yzm_img"/></td>
-                </tr>
-            </table>
-        </form>
-        <input type="button" value="确认修改" class="btn" id="btn" @click="updateInfo"/>
-        <input type="button" value="返回" @click="loginflag=!loginflag">
-    </div>
-
-    <!--  <div class="look">浏览记录</div> -->
-    <br>
-    <hr />
-    <br>
-    <div class="shoppingcar">
-        <div class="carbag" id="carbag">
-            <b  @click=" historyflag=!historyflag,buyHistory()">购买记录</b>
-            <table id="bagcontent" v-if="historyflag">
-                <tr>
-                    <td>
-                        商品编号
-                    </td>
-                    <td>
-                        商品名称
-                    </td>
-                    <td>
-                        价格
-                    </td>
-                    <td>
-                        购买数量
-                    </td>
-                    <td>
-                        购买时间
-                    </td>
-                </tr>
-                <tr v-for="item in data">
-                    <td>
-                        {{item.gno}}
-                    </td>
-                    <td>
-                        {{item.gname}}
-                    </td>
-                    <td>
-                        {{item.price}}
-                    </td>
-                    <td>
-                        {{item.num}}
-                    </td>
-                    <td>
-                        {{item.odate}}
-                    </td>
-                </tr>
-
-            </table>
+    <!--个人信息显示-->
+    <div class="Bott">
+        <div class="wrapper clearfix">
+            <div class="you fl">
+                <h2>个人信息</h2>
+                <div class="gxin">
+                    <div class="tx"><a><img :src=`${this.head}` width="90px" height="90px"/>
+                        <p id="avatar" v-if="!modifyPhotoFlag" @click="isModifyPhoto()">修改头像</p></a></div>
+                    <div class="xx">
+                        <h3 class="clearfix"><strong class="fl">基础资料</strong>
+                            <a class="fr" id="edit1" v-if="!modifyInformationFlag"
+                               @click="isModifyInformation();showUserInfo()">编辑</a>
+                        </h3>
+                        <div>昵称：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{nickName}}</div>
+                        <div>密码：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**********</div>
+                        <div>电话：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{Tel}}</div>
+                        <div>电子邮箱：&nbsp;&nbsp;&nbsp;{{email}}</div>
+                        <div>注册时间：&nbsp;&nbsp;&nbsp;{{regDate}}</div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-
     </div>
-    <br>
-    <hr />
-    <br>
-    <div class="look" v-if="historyflag">
-<!--        <span @click="getHistory()">浏览记录</span>-->
-<!--        <hr />-->
-<!--        <ul>-->
-<!--            <li v-for="item in reversehistory">{{item.gno}} - {{item.gname}}</li>-->
-<!--        </ul>-->
+    <!--遮罩-->
+    <div class="mask"></div>
+
+    <!--编辑弹框-->
+    <div id="modify" v-if="modifyInformationFlag">
+        <h3>编辑个人信息</h3>
+        <form>
+            <p><label>昵称：</label><input type="text" name="nickName2" placeholder="请输入新用户名"
+                                        id="nickName2" v-model="nickName2"/></p>
+
+            <p><label>新密码：</label><input type="password" name="pwd" placeholder="请输入新密码"
+                                         id="pwd" v-model="pwd"/></p>
+
+            <p><label>确认密码：</label><input type="password" name="pwd2" placeholder="请确认新密码"
+                                          id="pwd2" v-model="pwd2"/></p>
+
+            <p><label>电话：</label><input type="text" name="Tel2" placeholder="请输入电话号码"
+                                        id="Tel2" v-model="Tel2"/></p>
+
+            <p><label>电子邮箱：</label><input type="text" name="email2" placeholder="请输入您注册时的邮箱"
+                                          id="email2" v-model="email2"/></p>
+            <a id="getYZM" @click="getYZM()">获取验证码</a>
+
+            <p><label>验证码：</label><input type="text" name="yzm" placeholder="请输入验证码"
+                                         id="yzm" v-model="yzm"/></p>
+
+            <div class="bc1">
+                <input type="button" value="确认修改" @click="modify()"/>
+                <input type="button" value="取消" @click=" modifyInformationFlag=!modifyInformationFlag;email2='' "/>
+            </div>
+        </form>
+    </div>
+
+    <!--修改头像框-->
+    <div id="photo" v-if="modifyPhotoFlag">
+        <span id="unshow" @click="modifyPhotoFlag=false">X</span>
+        <h3>修改头像</h3>
+        <form>
+            <h4>请上传图片</h4>
+            <input type="file" name="head" @change="updateHead"/>
+            <input type="button" value="上传头像" @click="updatePhoto()"/>
+            <p>jpg或png，大小不超过2M</p>
+            <input type="submit" value="确认" @click="checkImageExists()"/>
+        </form>
     </div>
 
     <footer>
         <div class="foot_link">
             <a href="#">关于我们</a> <span> | </span>
+
+
             <a href="#">联系我们</a> <span> | </span>
             <a href="#">招聘广告</a> <span> | </span>
             <a href="#">友情链接</a>
@@ -233,167 +277,193 @@
     </footer>
 
 </div>
-</body>
-<script src="js/vue.js"></script>
-<script src="js/axios.js"></script>
+
+<script src="../js/vue.js"></script>
+<script src="../js/axios.js"></script>
 <script type="text/javascript">
-    let logininfo=new Vue({
-        el:"#login_info",
-        data: {
-            isLogin: false,
-            uname:'',
-        },
-        methods: {
-            logout: function () {
-                axios.post("login.action?op=logout").then(data => {
-                    var result = data.data;
-                    if (result.code == 1) {
-                        this.isLogin = false;
-                        const isLogin = {isLogin: 0}; //0代表未登录，1代表登录
-                        localStorage.setItem("Login", JSON.stringify(isLogin));
-                    }
-                });
-            }
-        },
-        created() {
-            var isLogin = JSON.parse(localStorage.getItem("Login"));
-            if (isLogin.isLogin == 1) {
-                this.isLogin = true;
-                var nickName = JSON.parse(localStorage.getItem("Username"));
-                this.uname = nickName.account;
-                return;
-            } else {
-                this.isLogin = false;
-            }
-        }
-    });
+
+    var addr_MiInformation = "http://localhost:2357/mipersonel/";
 
     let vm = new Vue({
         el: "#app",
+
         data: {
-            information: [],//显示信息列表
             isLogin: false,//是否登录
-            nickName: "",//用户名
-            pwd: "",
-            Tel: "",
-            email: "",
-            loginflag: false,//修改信息的开关
+            modifyInformationFlag: false,//修改信息框出现的开关
+            modifyPhotoFlag: false,//修改头像框出现的开关
+
+            mno: 1, //数据库中用户id TODO:之后要从token中取到
+            nickName: "",//数据库中的昵称
+            nickName2: "",//用户输入的昵称
+            pwd: "",//要修改的密码
             pwd2: "",//确认密码
-            yzm: "",//验证码,
-            mno: 0 , //数据库中用户id
+            Tel: "",//数据库中的电话
+            Tel2: "",//用户输入的电话
+            email: "",//数据库中的email
+            email2: "",//用户输入的email
+            yzm: "",//用户输入的验证码,
+            yzm2: "",//服务器端发来的正确的验证码
+            regDate: "",//注册时间
 
-            historyflag: false,
-            data: [],//
-
-            history:[],
-            buy: {
-                gno: "",
-                gname: "",
-                price: "",
-                nums: "",
-                odate: ""
-            },
+            head: '',//数据库中的头像
+            head2: '',//用户修改的头像
+            msg: "",
         },
         methods: {
-            //获取浏览记录
-            getHistory:function () {
-                axios.post("info.action?op=getHistory").then(result=>{
-                    var resultData=result.data;
-                    this.history=[];
-                    if (resultData.code==1){
-                        this.history=resultData.data;
-                    }
+            //取头像框的值 e:下拉列表触发的事件对象
+            //target:目标对象,eventType
+            updateHead: function (e) {
+                var self = this;//保证在局部作用域中,避免污染this
+                self.head2 = e.target.files[0];
+            },
+            //让这两个框不能同时出现
+            isModifyInformation: function () {//改变修改信息框出现的方法
+                this.modifyInformationFlag = !this.modifyInformationFlag;
+                this.modifyPhotoFlag = false;
+            },
+            isModifyPhoto: function () {//改变修改头像框出现的方法
+                this.modifyPhotoFlag = !this.modifyPhotoFlag;
+                this.modifyInformationFlag = false;
+            },
+
+            showUserInfo: function () {//显示用户信息
+                var params = new URLSearchParams();
+                params.append("mno", this.mno);
+                axios.post(addr_MiInformation + "miInformation/showUserInfo", params).then(data => {
+                    var result = data.data;
+                    // if (result.code == 0) {
+                    //     alert("请先登录！！");
+                    //     window.location.href="login.html";
+                    //     return;
+                    // }
+                    this.nickName = result.data.nickname;
+                    this.nickName2 = this.nickName;//将nickName2的初始值设置为nickName
+                    this.pwd = result.data.pwd;
+                    this.pwd2 = this.pwd// 将pwd2的初始值设置为pwd
+                    this.Tel = result.data.tel;
+                    this.Tel2 = this.Tel;// 将Tel2的初始值设置为Tel
+                    this.regDate = result.data.regdate;
+                    //处理一下收到的email
+                    var emailStr = result.data.email;
+                    var atIndex = emailStr.indexOf("@");
+                    var prefix = emailStr.substring(0, atIndex);
+                    var suffix = emailStr.substring(atIndex);
+                    var hideLength = prefix.length - 2;
+                    var hiddenStr = "*".repeat(hideLength);
+                    var hiddenPrefix = prefix.substring(0, 1) + hiddenStr + prefix.substring(prefix.length - 1);
+
+                    this.email = hiddenPrefix + suffix;
+                    this.head = result.data.photo;
                 });
             },
-            showAllInfo: function () {
+            getYZM: function () {//获取验证码
                 var params = new URLSearchParams();
-                params.append("op", "info");
                 params.append("mno", this.mno);
-                axios.post("info.action", params).then(data => {
+                params.append("email", this.email2);
+                axios.post(addr_MiInformation + "getYZM", params).then(data => {
                     var result = data.data;
                     if (result.code == 0) {
-                        alert("请先登录！！");
-                        window.location.href="login.html";
+                        alert("请输入正确的电子邮箱!");
                         return;
                     }
-                    this.nickName = result.data.nickName;
-                    //this.pwd = result.data.pwd;
-                    this.Tel = result.data.tel;
-                    this.email = result.data.email;
-                    this.isLogin = true;
+                    this.yzm2 = result.data;
                 });
             },
-            updateInfo: function () {
+            modify: function () {//确认修改
+                if (this.yzm2 !== this.yzm || this.yzm.length === 0) {
+                    alert("验证码不正确!");
+                    return;
+                }
+                if (this.pwd !== this.pwd2) {
+                    alert("两次密码不一致!");
+                    return;
+                }
+                if (this.nickName2.length < 3) {
+                    alert("昵称长度应大于3!");
+                    return;
+                }
+                if (this.pwd.length < 6 || this.pwd2.length < 6) {
+                    alert("密码长度应大于6!");
+                    return;
+                }
                 var params = new URLSearchParams();
-                params.append("op", "update");
-                params.append("nickName", this.nickName);
+                params.append("mno", this.mno);
+                params.append("nickname", this.nickName2);
                 params.append("pwd", this.pwd);
-                params.append("pwd2", this.pwd2);
-                params.append("Tel", this.Tel);
-                params.append("email", this.email);
-                params.append("yzm", this.yzm);
-                params.append("mno", this.mno);
-                axios.post("info.action", params).then(data => {
+                params.append("tel", this.Tel2);
+                axios.post(addr_MiInformation + "modify", params).then(data => {
                     var result = data.data;
-                    if (result.code == 0 || result.code == 2 || result.code == 3 || result.code == 4) {
-                        alert("修改失败:" + result.msg);
-                        return;
+                    if (result.code === 1) {
+                        alert("修改信息成功!");
+                        this.modifyInformationFlag = false;
+                        this.showUserInfo();
                     }
-                    alert("修改信息成功!")
-                    location.href = 'front/Information.html';
-                })
-            },
-            buyHistory: function () {
-                var params = new URLSearchParams();
-                // alert("mno:"+this.mno);
-                params.append("op", "buyHistory");
-                params.append("mno", this.mno);
-                axios.post("info.action", params).then(data => {
-                    var result = data.data;
-                    if (result.code != 1) {
-                        //alert("没有购买记录");
-                        vm.$data.data = "还未购买商品哦!!";
-                    }
-                    this.buy.gno = result.data.gno;
-                    this.buy.gname = result.data.gname;
-                    this.buy.price = result.data.price;
-                    this.buy.nums = result.data.num;
-                    this.buy.odate = result.data.odate;
-
-                    vm.$data.data = result;
-
                 });
-            }
+            },
+            updatePhoto: function () {//更新头像
+                if (this.head2.length <= 0) {
+                    alert("未选择头像!");
+                    return;
+                }
+                var suffix = this.head2.name.substring(this.head2.name.lastIndexOf(".") + 1).toLowerCase();
+                if (suffix !== "png" && suffix !== "jpg") {
+                    alert("请选择格式为.png或.jpg的图片文件！");
+                    return;
+                }
+                let params = new FormData();
+                params.append("mno", this.mno);
+                params.append("photo", this.head2);
+                //添加请求头
+                let config = {
+                    header: {'Content-Type': 'multipart/form-data'}
+                }
+                axios.post(addr_MiInformation + "updatePhoto", params, config).then(data => {
+                    var result = data.data
+                    if (result.code === 1) {
+                        alert("修改头像成功!");
+                    }
+                });
+            },
+            checkImageExists: function () {//判断本地是否下载好了用户传上来的图片
+                if (this.head2.length <= 0) {
+                    alert("未选择头像!");
+                    return;
+                }
+                var suffix = this.head2.name.substring(this.head2.name.lastIndexOf(".") + 1).toLowerCase();
+                if (suffix !== "png" && suffix !== "jpg") {
+                    alert("请选择格式为.png或.jpg的图片文件！");
+                    return;
+                }
+
+                this.showUserInfo();
+                this.modifyPhotoFlag = false;
+            },
+
         },
 
-        computed:{
-            reversehistory(){
-                return this.history.reverse();
-            }
+        watch: {
+            pwd: function (newVal, oldVal) {//监听pwd的值,当用户修改了pwd时 pwd2的值清空
+                if (this.pwd2 !== this.pwd) {
+                    this.pwd2 = "";
+                }
+            },
         },
-        mounted(){
-            this.showAllInfo();
-            this.historyflag=!this.historyflag
-            this.buyHistory();
-        },
-        created() {
-            var isLogin = JSON.parse(localStorage.getItem("Login"));
-            if (isLogin.isLogin == 1) {
-                this.isLogin = true;
-                var nickName = JSON.parse(localStorage.getItem("Username"));
-                this.nickName = nickName.account;
-                var mno = JSON.parse(localStorage.getItem("Mno"));
-                this.mno = mno.mno;
-            } else {
-                this.isLogin = false;
-            }
 
-        },
+        // create() {//创建的时候先取到登录的用户的mno
+        //     axios.post(addr_MiInformation + "getMno").then(data => {
+        //         var result = data.data;
+        //         this.mno = result.data.mno;
+        //     });
+        // },
+
+        mounted() {
+            this.showUserInfo();
+        }
 
     });
 
 
 </script>
 
-
+</body>
 </html>

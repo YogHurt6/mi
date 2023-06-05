@@ -134,9 +134,9 @@
         <a @click.prevent="clickPage(1)">第一页</a>
         <a @click.prevent="clickPage(pagebean.pre)" :page-data="pagebean.pre">上一页 </a>
         <a @click.prevent="clickPage(pagebean.next)" :page-data="pagebean.next">下一页 </a>
-        <a @click.prevent="clickPage(pagebean.totalpages)" :page-data="pagebean.totalpages">最后一页 </a>
-        总共条{{pagebean.total}}记录/共分{{pagebean.totalpages}}页，
-        每页{{pagebean.pagesize}}条，当前第{{pagebean.pageno}}页
+        <a @click.prevent="clickPage(pagebean.totalPages)" :page-data="pagebean.totalPages">最后一页 </a>
+        总共条{{pagebean.total}}记录/共分{{pagebean.totalPages}}页，
+        每页20条，当前第{{pagebean.pageno}}页
         <br />
         按<select id="sortby" v-model="pagebean.sortby">
         <option value="gno" selected>商品编号</option>
@@ -206,13 +206,13 @@
             },
             update:function(){
                 var params=new URLSearchParams();
-                params.append("ugno",this.updata.ugno)
-                params.append("ugname",this.updata.ugname)
-                params.append("utno",this.updata.utno)
-                params.append("uprice",this.updata.uprice)
-                params.append("ubalance",this.updata.ubalance)
-                params.append("ustatus",this.updata.ustatus)
-                axios.post("../../goods.action?op=updateGoods",params).then(result=>{
+                params.append("gno",this.updata.ugno)
+                params.append("gname",this.updata.ugname)
+                params.append("tno",this.updata.utno)
+                params.append("price",this.updata.uprice)
+                params.append("balance",this.updata.ubalance)
+                params.append("status",this.updata.ustatus)
+                axios.post("http://localhost:2357/migoods/addgoods/modifygood",params).then(result=>{
                     if (result.data.code==1){
                         alert("修改成功！！")
                         this.turnup=!this.turnup;
@@ -229,7 +229,7 @@
                 };
                 var params=new URLSearchParams();
                 params.append("gno",this.delno)
-                axios.post("../../goods.action?op=delGoods",params).then(result=>{
+                axios.post("http://localhost:2357/migoods/addgoods/delgood",params).then(result=>{
                     if (result.data.code==1){
                         alert("删除成功！！")
                         this.turndel=!this.turndel;
@@ -266,7 +266,7 @@
                         params.append("pics",this.picUrl);
                         params.append("descr",this.descr);
                         params.append("status",this.status);
-                        axios.post("../../goods.action?op=newGoods",params).then(result=>{
+                        axios.post("http://localhost:2357/migoods/addgoods/add",params).then(result=>{
                             if(result.data.code==1){
                                 alert("添加商品成功！！")
                                 this.turn=!this.turn;
@@ -282,7 +282,7 @@
                 //})
             },
             showData:function () {
-                axios.post("../../goods.action?op=showGoodsInfo").then(result=>{
+                axios.post("http://localhost:2357/migoods/addgoods/showGoods").then(result=>{
                     if (result.data.code==1){
                         this.message=result.data.data;
                         return;
@@ -300,8 +300,9 @@
                 params.append("pageno",pageno);
                 params.append("sortby",this.pagebean.sortby);
                 params.append("sort",this.pagebean.sort);
+                params.append("pagesize",20);
                 //返回一个promise
-                return axios.post("../../goods.action?op=findFoodsByPage",params);
+                return axios.post("http://localhost:2357/migoods/addgoods/findByPage",params);
             },
             displayPage:function (result) {
                 let jsonModel2=result;

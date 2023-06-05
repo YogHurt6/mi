@@ -53,8 +53,7 @@
         methods:{
             showAdmin:function () {
                 var params =new URLSearchParams();
-                params.append("op","showAdmin");
-                axios.post("../../admin.action",params).then(data=>{
+                axios.post("http://localhost:2357/mipersonel/personel/showAdmin").then(data=>{
                     let jsonModel=data.data;
                     if(jsonModel.code==1){
                         this.admins=jsonModel.data;

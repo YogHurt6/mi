@@ -62,7 +62,7 @@
             del:function(ono){
               var params=new URLSearchParams()
                 params.append("ono",ono)
-                axios.post("../../goods.action?op=delorder",params).then(result=> {
+                axios.post("http://localhost:2357/migoods/order/delOrder",params).then(result=> {
                     if(result.data.code==1) {
                         alert("成功删除该订单！！")
                         this.showData();
@@ -79,7 +79,7 @@
                 var params=new URLSearchParams();
                 params.append("ono",ono)
                 params.append("post","del")
-                axios.post("../../goods.action?op=postgoods",params).then(result=>{
+                axios.post("http://localhost:2357/migoods/order/modifyOrder",params).then(result=>{
                         if (result.data.code==1){
                             alert("已取消该物品的配送！")
                             this.showData();
@@ -97,7 +97,7 @@
                 var params=new URLSearchParams();
                 params.append("ono",ono)
                 params.append("post","send")
-                axios.post("../../goods.action?op=postgoods",params).then(result=>{
+                axios.post("http://localhost:2357/migoods/order/modifyOrder",params).then(result=>{
                     if (result.data.code==1){
                         alert("该商品开始派送!!")
                         this.showData();
@@ -108,7 +108,7 @@
                 )
             },
           showData:function () {
-              axios.post("../../goods.action?op=showOrderInfo").then(result=>{
+              axios.post("http://localhost:2357/migoods/order/showOrder").then(result=>{
                   if (result.data.code==1){
                       this.message=result.data.data;
                       return;

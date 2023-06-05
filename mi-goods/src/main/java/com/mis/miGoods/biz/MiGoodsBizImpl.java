@@ -2,7 +2,7 @@ package com.mis.miGoods.biz;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.mis.miGoods.bean.Goodsinfo;
+import com.mis.bean.Goodsinfo;
 import com.mis.miGoods.dao.MiGoodsDao;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +33,13 @@ public class MiGoodsBizImpl implements MiGoodsBiz {
     @Override
     public Goodsinfo findById(String gno) {
         return this.miGoodsDao.selectById(gno);
+    }
+
+    @Override
+    public Goodsinfo findByTno(String tno) {
+        QueryWrapper qe=new QueryWrapper();
+        qe.eq("tno",tno);
+        return this.miGoodsDao.selectOne(qe);
     }
 
     @Override

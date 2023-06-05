@@ -132,25 +132,18 @@
                     return;
                 }
                 var params = new URLSearchParams;
-                params.append("op", "register");
-                params.append("nickName", this.nickName);
+                params.append("nickname", this.nickName);
                 params.append("pwd", this.pwd);
                 params.append("tel", this.tel);
                 params.append("email", this.email);
                 params.append("code", this.code);
                 //params.append("regtime", this.regtime);
-                axios.post("member.action?", params).then(data => {
+                axios.post("http://localhost:2357/misecurity/register/", params).then(data => {
                     var result = data.data;
                     if (result.code == 0) {
                         alert("注册失败,原因:" + result.msg);
                         return;
-                    }else if(result.code==2){
-                        alert("注册失败,该手机号已注册！！")
-                        return;
-                    }else if(result.code==3){
-                        alert("注册失败,该邮箱号已注册！！")
-                        return;
-                    }else {
+                    } else {
                     alert("注册成功!，新用户:"+this.nickName);
                     window.location.href="login.html";
                     }
@@ -163,11 +156,10 @@
                 //     this.disabled = false;
                 // }, 3000);
                 var params=new URLSearchParams;
-                params.append("op","qqcode");
                 params.append("email",this.email);
-                axios.post("member.action?"+params).then(data =>{
+                axios.post("http://localhost:2357/misecurity/getYzm?"+params).then(data =>{
                     if (data.data.code==1){
-                        alert("发送成功!!1");
+                        alert("发送成功!!");
                         this.concode=data.data.data;
                         return;
                     }else {

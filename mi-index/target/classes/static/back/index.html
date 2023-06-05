@@ -51,19 +51,18 @@
 		methods:{
 			login:function () {
                var params =new URLSearchParams();
-                 params.append("op","login");
                 params.append("aname",this.aname);
                 params.append("pwd",this.pwd);
 				/*axios.post("../admin.action?op=login&"+this.aname+"&pwd="+this.pwd).then(data=>{*/
-                axios.post("../admin.action",params).then(data=>{
+                axios.post("http://localhost:2357/misecurity/admin.action",params).then(data=>{
                 	 let jsonModel=data.data;
                 	 if(jsonModel.code==1){
                 	 	alert("登录成功");
+                	 	localStorage.setItem('tokenm', jsonModel.data.token);  //TODO:.....
 						 // const data={ aname:jsonModel.data.aname}; //json对象
 						 // //浏览器端会话机制
 						 // sessionStorage.setItem("aname",JSON.stringify(data));
-                	  window.location.href="manager/index.html"
-
+                	  window.location.href="manager/index.html";
 					 }else{
                 	 	alert("登录失败");
 					 }

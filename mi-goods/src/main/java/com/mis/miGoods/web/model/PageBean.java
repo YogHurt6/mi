@@ -8,7 +8,7 @@ import java.util.List;
 public class PageBean<T> {
     //以下两个属性是界面给的已知参数
     private int pageno = 1;    //当前第几页
-    private int pagesize = 5;   //每页多少条
+    private int pagesize = 20;   //每页多少条
     private String sortby;    //排序列的列名
     private String sort;    //取值为: asc/desc
 

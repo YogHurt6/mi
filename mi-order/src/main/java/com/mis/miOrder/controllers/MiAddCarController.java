@@ -1,7 +1,7 @@
 package com.mis.miOrder.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mis.miGoods.bean.Goodsinfo;
+import com.mis.bean.Goodsinfo;
 import com.mis.miOrder.model.CartItem;
 
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +28,8 @@ public class MiAddCarController {
     private RestTemplate restTemplate;
 
     @RequestMapping("addCart")
-    public Map<String, Object> addCart(@RequestParam String gno,
-                                       @RequestParam String mno,
+    public Map<String, Object> addCart(@RequestParam Integer gno,
+                                       @RequestParam Integer mno,
                                        @RequestParam Integer num) {
         Map<String, Object> result = new HashMap<>();
         Goodsinfo goodsinfo = null;
@@ -81,6 +81,33 @@ public class MiAddCarController {
             this.redisTemplate.opsForHash().delete("cart_"+mno, keys.toArray());
             result.put("code", 1);
             result.put("obj", keys);   //keys中存的是 删除的商品编号
+        } else {
+            result.put("code", 0);
+        }
+        return result;
+    }
+
+    @RequestMapping("clear")
+    public Map<String, Object> clearAll(@RequestParam String mno,
+                                        @RequestParam String... itemIds) {
+        Map<String, Object> result = new HashMap<>();
+        if (this.redisTemplate.hasKey("cart_"+mno)) {
+            Set<Object> keys = this.redisTemplate.opsForHash().keys("cart_"+mno);
+            this.redisTemplate.opsForHash().delete("cart_"+mno, (Object[]) itemIds);
+//            Object value = redisTemplate.opsForHash().get(cartKey, productId);
+//            if (value != null) {
+//                int itemCount = (int) value;
+//                if (itemCount <= count) {
+//                    // 删除商品
+//                    redisTemplate.opsForHash().delete(cartKey, productId);
+//                } else {
+//                    // 更新商品数量
+//                    redisTemplate.opsForHash().put(cartKey, productId, itemCount - count);
+//                }
+//            }
+            //redisTemplate.opsForHash().delete(cartKey, (Object[]) itemIds);
+            result.put("code", 1);
+            result.put("obj", itemIds);   //keys中存的是 删除的商品编号
         } else {
             result.put("code", 0);
         }

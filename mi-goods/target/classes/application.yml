@@ -1,5 +1,12 @@
 spring:
   cloud:
+    gateway:  #基础的路由转发配置
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
     inetutils:
       ignored-interfaces: 'VMware Virtual Ethernet Adapter for VMnet1,VMware Virtual Ethernet Adapter for VMnet8'
     nacos:
@@ -10,6 +17,7 @@ spring:
         namespace: mistore
   application:
     name: mi-goods
+    filePath: "E://upload"
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
@@ -19,7 +27,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
   web:
     resources:
-      static-locations: [classpath:/public/,classpath:/resources/,classpath:/META-INF/resources/,classpath:/static/]
+      static-locations: [file:e:/upload/,classpath:/public/,classpath:/resources/,classpath:/META-INF/resources/,classpath:/static/]
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  #打印mybatis-plus的sql语句
